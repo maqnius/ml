@@ -1,0 +1,47 @@
+Here are a few links to some 'easy' classification datasets from kaggle.com.
+Those are good to get started.
+
+In general, for any kaggle dataset, there is a
+'data' tab where a 'train.csv' and a 'test.csv' dataset can be downloaded. the
+'train.csv' dataset contains labelled data and should be used to train the model.
+The 'test.csv' dataset should be used for testing. If you want to see how well you
+do, you can create an account for your team and submit your predictions for
+'test.csv' to the website. You will then appear on the 'Leaderboard' tab.
+
+Feel free to explore https://www.kaggle.com/competitions for more datasets. I do
+recommend starting with the ones below though. Inform me if you want to use other
+datasets.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
+%
+
+1) Predicting survival probability of 'Titanic' passengers:
+
+    https://www.kaggle.com/c/titanic
+
+2) MNIST handwritten digits (this is a very famous toy dataset):
+
+    https://www.kaggle.com/c/digit-recognizer
+
+3) Bike Sharing Demand:
+
+    https://www.kaggle.com/c/bike-sharing-demand
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%
+%
+
+The datasets below do not have a 'test.csv' - all the data is labelled. You should
+split the data into 'train' and 'test' yourself if you want to work with this.
+
+4) Iris species (another famous small dataset):
+
+    https://www.kaggle.com/uciml/iris
+
+5) IMDB 5000 movies dataset:
+
+    https://www.kaggle.com/deepmatrix/imdb-5000-movie-dataset
