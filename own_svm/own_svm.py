@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 
-def test_own_svm():
+def svm_test(smo):
 
     from sklearn.datasets import make_moons, make_circles, make_classification
     from sklearn.model_selection import train_test_split
@@ -30,7 +30,7 @@ def test_own_svm():
     X_train, X_test, y_train, y_test = train_test_split(X_all, y_all, test_size=num_test, random_state=23)
 
     # Create test
-    clf = own_svm(k = 0.001, C = 100.0)
+    clf = smo(k = 0.001, C = 100.0)
     clf.fit(X_train, y_train)
 
     predictions = clf.predict(X_test)
@@ -39,8 +39,25 @@ def test_own_svm():
 
     assert(predictions.array_equal(y_test.as_matrix()))
 
+#def test_own_smo():
+#    svm_test(own_smo)
 
-class own_svm:
+def test_own_smo_simple():
+    svm_test(own_smo_simple)
+
+class own_smo:
+
+    def __init__(self, k, C):
+        self.k = k
+        self.C = C
+
+    def fit(self, X_train, y_train):
+        return None
+
+    def predict(self, X):
+        return None
+
+class own_smo_simple:
 
     def __init__(self, k, C):
         self.k = k
