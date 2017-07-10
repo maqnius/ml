@@ -38,18 +38,22 @@ class own_smo_simple:
 
     Main Source: http://cs229.stanford.edu/materials/smo.pdf
     """
-    def __init__(self, C):
-        self.C = C
-        # self.kernel = kernel_rbf
-        self.kernel_set = Kernels()
-        self.kernel = None
+    def __init__(self, C = 1.0, gamma=0.01):
+
         self.X_train = None
         self.y_train = None
         self.alpha = None
         self.n_test_samples = 0
         self.b = 0.
+        self.C = C
 
-    def fit(self, X_train, y_train, max_passes=10, tol=1e-4, kernel="linear", gamma = 1.0):
+        self.min_label = -1
+
+        self.kernel_set = Kernels()
+        self.kernel_set.gamma = gamma
+        self.kernel = None
+
+    def fit(self, X_train, y_train, max_passes=10, tol=1e-4, kernel="linear"):
         """
         Fits alpha values and the threshold b with given Training data
 
@@ -67,9 +71,6 @@ class own_smo_simple:
         """
 
         # Set Kernel
-        if kernel == "rbf":
-            # If rbf Kernel, set the gamma value first
-            self.kernel_set.gamma = gamma
         self.kernel = self.kernel_set.get_kernel(kernel)
 
         # Convert arguments to numpy arrays if they are in pandas datastructures
@@ -77,6 +78,12 @@ class own_smo_simple:
             self.X_train = X_train.as_matrix()
         if type(y_train) == pd.DataFrame or type(y_train) == pd.Series:
             self.y_train = y_train.as_matrix().squeeze(axis = 1)
+
+        # QUICK AND DIRTY
+        # Detect if the lables are [1, 0] instead of [1, -1] and correct them
+        if min(self.y_train) == 0:
+            self.min_label = 0
+            self.y_train = self.y_train * 2 - 1
 
         # Create array for storing the alpha values
         self.n_test_samples = len(y_train)
@@ -184,7 +191,7 @@ class own_smo_simple:
         Returns
         -------
         Integer Array or Integer
-            Predicted classes
+            Predicted classes [1, -1]
         """
         # Convert to numpy arrays
         if type(X) == pd.DataFrame or type(X) == pd.Series:
@@ -195,7 +202,15 @@ class own_smo_simple:
         for i in range(len(y)):
             # Apply the decision function to each point
             y[i] = self.dec_func(X[i])
-        return np.sign(y).astype(int)
+
+        y = np.sign(y).astype(int)
+
+        # If given Train format was labeled with [0,1]
+        # return the labeles in the same way
+        if self.min_label == 0:
+            y = (y + 1) // 2
+
+        return y
 
     def kernel_ind(self, i, j):
         """

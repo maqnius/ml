@@ -28,7 +28,6 @@ def svm_test(smo):
 
     X, y = make_classification(n_samples=20, n_features=2, n_redundant=0, n_informative=2,
                                random_state=1, n_clusters_per_class=1)
-    y = y*2-1  # Change lables from [1,0] to [1, -1]
 
     rng = np.random.RandomState(2)
     X += 2 * rng.uniform(size=X.shape)
@@ -54,7 +53,8 @@ def svm_test(smo):
 
     assert(type(predictions) == np.ndarray)
 
-    assert(np.array_equal(predictions, y_test.as_matrix().squeeze(axis = 1)))
+    y_test = y_test.as_matrix().squeeze(axis = 1)
+    assert(np.array_equal(predictions, y_test))
 
 
 #def test_own_smo():
