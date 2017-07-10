@@ -17,7 +17,7 @@
 import numpy as np
 import pandas as pd
 from random import randint
-from kernels import kernel_lin, kernel_rbf
+from kernels import Kernels
 
 class own_smo:
     """
@@ -41,14 +41,15 @@ class own_smo_simple:
     def __init__(self, C):
         self.C = C
         # self.kernel = kernel_rbf
-        self.kernel = kernel_lin
+        self.kernel_set = Kernels()
+        self.kernel = None
         self.X_train = None
         self.y_train = None
         self.alpha = None
         self.n_test_samples = 0
         self.b = 0.
 
-    def fit(self, X_train, y_train, max_passes=10, tol=1e-4):
+    def fit(self, X_train, y_train, max_passes=10, tol=1e-4, kernel="linear", gamma = 1.0):
         """
         Fits alpha values and the threshold b with given Training data
 
@@ -64,6 +65,13 @@ class own_smo_simple:
         tol: float
             Tolerance on estimated Error
         """
+
+        # Set Kernel
+        if kernel == "rbf":
+            # If rbf Kernel, set the gamma value first
+            self.kernel_set.gamma = gamma
+        self.kernel = self.kernel_set.get_kernel(kernel)
+
         # Convert arguments to numpy arrays if they are in pandas datastructures
         if type(X_train) == pd.DataFrame:
             self.X_train = X_train.as_matrix()

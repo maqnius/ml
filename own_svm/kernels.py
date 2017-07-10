@@ -17,16 +17,28 @@
 import numpy as np
 
 
-def kernel_lin(x, y):
+class Kernels:
     """
-    Linear kernel
+    Class that holds different Kernels
     """
-    return x.dot(y)
+    def __init__(self):
+        self.gamma = 1.0
+        self.kernels = {
+            "rbf" : self.kernel_rbf,
+            "linear": self.kernel_lin}
 
+    def get_kernel(self, kernel_name):
+        return self.kernels[kernel_name]
 
-def kernel_rbf(x ,y, gamma=1.0):
-    """
-    RBF Kernel
-    """
-    d = x - y
-    return np.exp(-np.dot(d, d) * gamma)
+    def kernel_lin(self, x, y):
+        """
+        Linear kernel
+        """
+        return x.dot(y)
+
+    def kernel_rbf(self, x, y):
+        """
+        RBF Kernel
+        """
+        d = x - y
+        return np.exp(-np.dot(d, d) * self.gamma)
