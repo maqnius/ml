@@ -28,8 +28,7 @@ def svm_test(smo):
 
     num_test = 0.2 # Part that is used for testing
     X_train, X_test, y_train, y_test = train_test_split(X_all, y_all, test_size=num_test, random_state=23)
-    print(X_train.shape)
-    exit(0)
+
     # Create test
     clf = smo(C = 100.0)
     clf.fit(X_train, y_train)
@@ -38,7 +37,7 @@ def svm_test(smo):
 
     assert(type(predictions) == np.ndarray)
 
-    assert(predictions.array_equal(y_test.as_matrix()))
+    assert(np.array_equal(predictions, y_test.as_matrix()))
 
 #def test_own_smo():
 #    svm_test(own_smo)
@@ -68,8 +67,8 @@ class own_smo_simple:
         self.b = 0.
 
     def fit(self, X_train, y_train, max_passes=10, tol=1e-3):
-        self.X_train = X_train
-        self.y_train = y_train
+        self.X_train = X_train.as_matrix()
+        self.y_train = y_train.as_matrix()
         self.alpha = np.zeros(len(y_train))
 
         passes = 0
@@ -78,8 +77,8 @@ class own_smo_simple:
 
             for i in range(len(self.y_train)):
                 E_i = self.dec_func(i) - self.y_train[i]
-                if ( self.y_train[i] * E_i < -tol and self.alpha[i] < C ) or \
-                    ( self.y_train[i] * E_i > tol and self.alpha[i] > 0):
+                if (self.y_train[i] * E_i < -tol and self.alpha[i] < self.C) or \
+                    (self.y_train[i] * E_i > tol and self.alpha[i] > 0):
 
                     j = int(np.random.rand()*len(y_train))
                     # Saving old alphas
@@ -153,5 +152,14 @@ class own_smo_simple:
     def kernel(self, x, y):
         return self.X_train[x].dot(self.X_train[y])
 
+    def kernel_neu(self, x, y):
+        return x.dot(y)
+
     def predict(self, X):
-        return None
+        X = X.as_matrix()
+        y = np.zeros(X.shape[0])
+        for i in range(len(y)):
+            y[i] = self.b
+            for j in range(len(self.y_train)):
+                y[i] += self.alpha[j]*self.y_train[j]*self.kernel_neu(self.X_train[j], X[i])
+        return y
