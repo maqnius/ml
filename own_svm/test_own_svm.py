@@ -16,7 +16,7 @@
 
 import numpy as np
 import pandas as pd
-from own_svm import OwnSMOsimple, OwnSMO
+from .own_svm import OwnSMOsimple, OwnSMO
 
 
 def svm_test(smo):
@@ -41,6 +41,7 @@ def svm_test(smo):
     # choose which dataset you want: '0' for moons, '1' for circles, '2' for linearly separable
     X_all = pd.DataFrame(datasets[2][0])
     y_all = pd.DataFrame(datasets[2][1])
+    y_all = y_all[0]
 
     num_test = 0.2 # Part that is used for testing
     X_train, X_test, y_train, y_test = train_test_split(X_all, y_all, test_size=num_test, random_state=23)
@@ -53,7 +54,7 @@ def svm_test(smo):
 
     assert(type(predictions) == np.ndarray)
 
-    y_test = y_test.as_matrix().squeeze(axis = 1)
+    y_test = y_test.as_matrix()
     assert(np.array_equal(predictions, y_test))
 
 

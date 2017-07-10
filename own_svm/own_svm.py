@@ -17,7 +17,7 @@
 import numpy as np
 import pandas as pd
 from random import randint
-from kernels import Kernels
+from .kernels import Kernels
 
 class OwnSMO:
     """
@@ -31,6 +31,7 @@ class OwnSMO:
 
     def predict(self, X):
         return None
+
 
 class OwnSMOsimple:
     """
@@ -72,7 +73,7 @@ class OwnSMOsimple:
         if type(X_train) == pd.DataFrame:
             self.X_train = X_train.as_matrix()
         if type(y_train) == pd.DataFrame or type(y_train) == pd.Series:
-            self.y_train = y_train.as_matrix().squeeze(axis = 1)
+            self.y_train = y_train.as_matrix()
 
         self.n_test_samples = len(y_train)
 
