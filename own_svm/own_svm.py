@@ -24,7 +24,7 @@ class own_smo_simple:
         self.n_test_samples = 0
         self.b = 0.
 
-    def fit(self, X_train, y_train, max_passes=10, tol=1e-6):
+    def fit(self, X_train, y_train, max_passes=10, tol=1e-4):
         # Convert arguments to numpy arrays if they are in pandas datastructures
         if type(X_train) == pd.DataFrame:
             self.X_train = X_train.as_matrix()
@@ -86,6 +86,8 @@ class own_smo_simple:
                     else:
                         self.b = (b_1 + b_2)/2
 
+                    self.alpha[i] = a_i
+                    self.alpha[j] = a_j
                     changed_alpha = True
 
             passes += 1 if changed_alpha else 0
@@ -124,4 +126,4 @@ class own_smo_simple:
             y[i] = self.b
             for j in range(self.n_test_samples):
                 y[i] += self.alpha[j]*self.y_train[j]*self.kernel(self.X_train[j], X[i])
-        return y
+        return np.sign(y).astype(int)
