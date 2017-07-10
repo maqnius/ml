@@ -115,9 +115,9 @@ class own_smo_simple:
                     b_2 = self.b - E_j - self.y_train[i] * (a_i - a_i_old) * self.kernel(i, j) - \
                         self.y_train[j] * (a_j - a_j_old) * self.kernel(j, j)
 
-                    if C > a_i > 0.:
+                    if self.C > a_i > 0.:
                         self.b = b_1
-                    elif C > a_j > 0:
+                    elif self.C > a_j > 0:
                         self.b = b_2
                     else:
                         self.b = (b_1 + b_2)/2
