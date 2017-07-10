@@ -21,8 +21,8 @@ class Kernels:
     """
     Class that holds different Kernels
     """
-    def __init__(self):
-        self.gamma = 1.0
+    def __init__(self, gamma):
+        self.gamma = gamma
         self.kernels = {
             "rbf" : self.kernel_rbf,
             "linear": self.kernel_lin}

@@ -38,7 +38,7 @@ class own_smo_simple:
 
     Main Source: http://cs229.stanford.edu/materials/smo.pdf
     """
-    def __init__(self, C = 1.0, gamma=0.01):
+    def __init__(self, C = 50.0, gamma = None):
 
         self.X_train = None
         self.y_train = None
@@ -49,11 +49,10 @@ class own_smo_simple:
 
         self.min_label = -1
 
-        self.kernel_set = Kernels()
-        self.kernel_set.gamma = gamma
+        self.kernel_set = Kernels(gamma)
         self.kernel = None
 
-    def fit(self, X_train, y_train, max_passes=10, tol=1e-4, kernel="linear"):
+    def fit(self, X_train, y_train, max_passes=10, tol=1e-4, kernel="rbf"):
         """
         Fits alpha values and the threshold b with given Training data
 
@@ -70,14 +69,20 @@ class own_smo_simple:
             Tolerance on estimated Error
         """
 
-        # Set Kernel
-        self.kernel = self.kernel_set.get_kernel(kernel)
+
 
         # Convert arguments to numpy arrays if they are in pandas datastructures
         if type(X_train) == pd.DataFrame:
             self.X_train = X_train.as_matrix()
         if type(y_train) == pd.DataFrame or type(y_train) == pd.Series:
             self.y_train = y_train.as_matrix().squeeze(axis = 1)
+
+        self.n_test_samples = len(y_train)
+
+        # Set Kernel
+        self.kernel = self.kernel_set.get_kernel(kernel)
+        if kernel == "rbf" and self.kernel_set.gamma is None:
+            self.kernel_set.gamma = 1 / self.n_test_samples
 
         # QUICK AND DIRTY
         # Detect if the lables are [1, 0] instead of [1, -1] and correct them
@@ -86,7 +91,6 @@ class own_smo_simple:
             self.y_train = self.y_train * 2 - 1
 
         # Create array for storing the alpha values
-        self.n_test_samples = len(y_train)
         self.alpha = np.zeros(self.n_test_samples)
 
         passes = 0  # Counting runs without changing a value
