@@ -97,21 +97,23 @@ class OwnSMOsimple:
 
             for i in range(self.n_test_samples):
                 # Calculate the error with the current alpha
-                E_i = self.dec_func(self.X_train[i]) - self.y_train[i]
+                y_i = self.y_train[i]
+                E_i = self.dec_func(self.X_train[i]) - y_i
 
                 # If accuracy is not satisfying yet
-                if (self.y_train[i] * E_i < -tol and self.alpha[i] < self.C) or \
-                        (self.y_train[i] * E_i > tol and self.alpha[i] > 0):
+                if (y_i * E_i < -tol and self.alpha[i] < self.C) or \
+                        (y_i * E_i > tol and self.alpha[i] > 0):
 
                     # Randomly choose another alpha to pair
                     j = randint(0, self.n_test_samples - 1)
+                    y_j = self.y_train[j]
 
                     # Saving old alphas
                     a_i_old = self.alpha[i]
                     a_j_old = self.alpha[j]
 
                     # Calculate the error of the other alpha
-                    E_j = self.dec_func(self.X_train[j]) - self.y_train[j]
+                    E_j = self.dec_func(self.X_train[j]) - y_j
 
                     # Calculate the valid limits that are a consequence of the linear dependence
                     L, H = self.calc_limits(i, j)
@@ -120,11 +122,14 @@ class OwnSMOsimple:
 
                     # Evaluate the second derivative of the Loss function for optimizing
                     # Eta should be negative to make shore, what we are approaching a maximum
-                    eta = 2 * self.kernel_ind(i, j) - self.kernel_ind(i, i) - self.kernel_ind(j, j)
+                    kernel_i_i = self.kernel_ind(i, i)
+                    kernel_j_j = self.kernel_ind(j, j)
+                    kernel_i_j = self.kernel_ind(i, j)
+                    eta = 2 * kernel_i_j - kernel_i_i - kernel_j_j
                     if eta >= 0:
                         continue
 
-                    a_j = a_j_old - self.y_train[j] * (E_i - E_j) / eta
+                    a_j = a_j_old - y_j * (E_i - E_j) / eta
 
                     # Clip the new alpha to the limits
                     if a_j > H:
@@ -132,17 +137,18 @@ class OwnSMOsimple:
                     elif a_j < L:
                         a_j = L
 
+                    # Check if the change is not negligible
                     if np.abs(a_j - a_j_old) < tol:
                         continue
 
                     # Calculate the new value for a_i from the new value of a_j
-                    a_i = a_i_old + self.y_train[i] * self.y_train[j] * (a_j_old - a_j)
+                    a_i = a_i_old + y_i * y_j * (a_j_old - a_j)
 
                     # Calculate new threshold
-                    d_a_i = self.y_train[i] * (a_i - a_i_old)
-                    d_a_j = self.y_train[j] * (a_j - a_j_old)
-                    b_1 = self.b - E_i - d_a_i * self.kernel_ind(i, i) - d_a_j * self.kernel_ind(i, j)
-                    b_2 = self.b - E_j - d_a_i * self.kernel_ind(i, j) - d_a_j * self.kernel_ind(j, j)
+                    d_a_i = y_i * (a_i - a_i_old)
+                    d_a_j = y_j * (a_j - a_j_old)
+                    b_1 = self.b - E_i - d_a_i * kernel_i_i - d_a_j * kernel_i_j
+                    b_2 = self.b - E_j - d_a_i * kernel_i_j - d_a_j * kernel_j_j
 
                     if self.C > a_i > 0.:
                         self.b = b_1
