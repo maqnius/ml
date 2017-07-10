@@ -38,7 +38,7 @@ def svm_test(smo):
 
     assert(type(predictions) == np.ndarray)
 
-    assert(np.array_equal(predictions, y_test.as_matrix()))
+    assert(np.array_equal(predictions, y_test.as_matrix().squeeze(axis = 1)))
 
 
 #def test_own_smo():

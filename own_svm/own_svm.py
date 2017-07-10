@@ -104,7 +104,7 @@ class own_smo_simple:
 
 
     def dec_func(self, x_ind):
-        sum = - self.b
+        sum = self.b
         for i in range(self.n_test_samples):
             sum += self.alpha[i] * self.y_train[i] * self.kernel_ind(i, x_ind)
 
