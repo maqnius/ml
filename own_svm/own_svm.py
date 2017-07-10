@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from random import randint
 
 
 def svm_test(smo):
@@ -67,20 +68,26 @@ class own_smo_simple:
         self.b = 0.
 
     def fit(self, X_train, y_train, max_passes=10, tol=1e-3):
-        self.X_train = X_train.as_matrix()
-        self.y_train = y_train.as_matrix()
+        # Convert arguments to numpy arrays if they are in pandas datastructures
+        if type(X_train) == pd.DataFrame:
+            self.X_train = X_train.as_matrix()
+        if type(y_train) == pd.DataFrame or type(y_train) == pd.Series:
+            self.y_train = y_train.as_matrix()
+
+        # Create array for storing the alpha values
         self.alpha = np.zeros(len(y_train))
 
-        passes = 0
+        passes = 0 # Counting runs without changing a value
         while passes < max_passes:
-            num_changed_alphas = 0
+            changed_alpha = False
 
             for i in range(len(self.y_train)):
                 E_i = self.dec_func(i) - self.y_train[i]
                 if (self.y_train[i] * E_i < -tol and self.alpha[i] < self.C) or \
-                    (self.y_train[i] * E_i > tol and self.alpha[i] > 0):
+                        (self.y_train[i] * E_i > tol and self.alpha[i] > 0):
 
-                    j = int(np.random.rand()*len(y_train))
+                    j = randint(0, len(y_train) - 1)
+
                     # Saving old alphas
                     a_i_old = self.alpha[i]
                     a_j_old = self.alpha[j]
@@ -92,7 +99,7 @@ class own_smo_simple:
                     if L == H:
                         continue
 
-                    eta = 2 * self.kernel(i, j) - self.kernel(i, i) - self.kernel(j, j)
+                    eta = 2 * self.kernel_ind(i, j) - self.kernel_ind(i, i) - self.kernel_ind(j, j)
                     if eta >= 0:
                         continue
 
@@ -103,17 +110,16 @@ class own_smo_simple:
                     elif a_j < L:
                         a_j = L
 
-                    if np.abs(a_j - a_j_old) < tol: # Lets check it
+                    if np.abs(a_j - a_j_old) < tol:  # Lets check it
                         continue
 
                     a_i = a_i_old + self.y_train[i] * self.y_train[j] * (a_j_old - a_j)
 
                     # Calculate new threshold
-                    b_1 = self.b - E_i - self.y_train[i] * (a_i - a_i_old) * self.kernel(i, i) - \
-                        self.y_train[j] * (a_j - a_j_old) * self.kernel(i, j)
-
-                    b_2 = self.b - E_j - self.y_train[i] * (a_i - a_i_old) * self.kernel(i, j) - \
-                        self.y_train[j] * (a_j - a_j_old) * self.kernel(j, j)
+                    d_a_i = self.y_train[i] * (a_i - a_i_old)
+                    d_a_j = self.y_train[j] * (a_j - a_j_old)
+                    b_1 = self.b - E_i - d_a_i * self.kernel_ind(i, i) - d_a_j * self.kernel_ind(i, j)
+                    b_2 = self.b - E_j - d_a_i * self.kernel_ind(i, j) - d_a_j * self.kernel_ind(j, j)
 
                     if self.C > a_i > 0.:
                         self.b = b_1
@@ -122,12 +128,9 @@ class own_smo_simple:
                     else:
                         self.b = (b_1 + b_2)/2
 
-                    num_changed_alphas += 1
+                    changed_alpha = True
 
-            if num_changed_alphas == 0:
-                passes += 1
-            else:
-                passes = 0
+            passes += 1 if changed_alpha else 0
 
     def calc_L(self, i, j):
         if self.y_train[i] != self.y_train[j]:
@@ -145,14 +148,14 @@ class own_smo_simple:
     def dec_func(self, x_ind):
         sum = self.b
         for i in range(len(self.y_train)):
-            sum += self.alpha[i] * self.y_train[i] * self.kernel(i, x_ind)
+            sum += self.alpha[i] * self.y_train[i] * self.kernel_ind(i, x_ind)
 
         return sum
 
-    def kernel(self, x, y):
-        return self.X_train[x].dot(self.X_train[y])
+    def kernel_ind(self, i, j):
+        return self.kernel(self.X_train[i], self.X_train[j])
 
-    def kernel_neu(self, x, y):
+    def kernel(self, x, y):
         return x.dot(y)
 
     def predict(self, X):
@@ -161,5 +164,5 @@ class own_smo_simple:
         for i in range(len(y)):
             y[i] = self.b
             for j in range(len(self.y_train)):
-                y[i] += self.alpha[j]*self.y_train[j]*self.kernel_neu(self.X_train[j], X[i])
+                y[i] += self.alpha[j]*self.y_train[j]*self.kernel(self.X_train[j], X[i])
         return y
