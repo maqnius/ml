@@ -16,7 +16,7 @@
 
 import numpy as np
 import pandas as pd
-from own_svm import own_smo_simple, own_smo
+from own_svm import OwnSMOsimple, OwnSMO
 
 
 def svm_test(smo):
@@ -62,4 +62,4 @@ def svm_test(smo):
 
 
 def test_own_smo_simple():
-    svm_test(own_smo_simple)
+    svm_test(OwnSMOsimple)

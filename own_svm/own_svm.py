@@ -19,7 +19,7 @@ import pandas as pd
 from random import randint
 from kernels import Kernels
 
-class own_smo:
+class OwnSMO:
     """
     Going to be a more advanced method of choosing the alphas
     """
@@ -32,7 +32,7 @@ class own_smo:
     def predict(self, X):
         return None
 
-class own_smo_simple:
+class OwnSMOsimple:
     """
     Implementation of a simple smo algorithm that chooses the comparable pairs randomly
 
@@ -68,9 +68,6 @@ class own_smo_simple:
         tol: float
             Tolerance on estimated Error
         """
-
-
-
         # Convert arguments to numpy arrays if they are in pandas datastructures
         if type(X_train) == pd.DataFrame:
             self.X_train = X_train.as_matrix()
@@ -85,7 +82,7 @@ class own_smo_simple:
             self.kernel_set.gamma = 1 / self.n_test_samples
 
         # QUICK AND DIRTY
-        # Detect if the lables are [1, 0] instead of [1, -1] and correct them
+        # Detect if the labels are [1, 0] instead of [1, -1] and correct them
         if min(self.y_train) == 0:
             self.min_label = 0
             self.y_train = self.y_train * 2 - 1
