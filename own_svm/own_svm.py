@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from random import randint
+from kernels import kernel_lin, kernel_rbf
 
 class own_smo:
 
@@ -18,6 +19,8 @@ class own_smo_simple:
 
     def __init__(self, C):
         self.C = C
+        # self.kernel = kernel_rbf
+        self.kernel = kernel_lin
         self.X_train = None
         self.y_train = None
         self.alpha = None
@@ -102,19 +105,12 @@ class own_smo_simple:
 
         return L, H
 
-
     def dec_func(self, x_ind):
         sum = self.b
         for i in range(self.n_test_samples):
             sum += self.alpha[i] * self.y_train[i] * self.kernel_ind(i, x_ind)
 
         return sum
-
-    def kernel_ind(self, i, j):
-        return self.kernel(self.X_train[i], self.X_train[j])
-
-    def kernel(self, x, y):
-        return x.dot(y)
 
     def predict(self, X):
         # Convert to numpy arrays
@@ -127,3 +123,6 @@ class own_smo_simple:
             for j in range(self.n_test_samples):
                 y[i] += self.alpha[j]*self.y_train[j]*self.kernel(self.X_train[j], X[i])
         return np.sign(y).astype(int)
+
+    def kernel_ind(self, i, j):
+        return self.kernel(self.X_train[i], self.X_train[j])
