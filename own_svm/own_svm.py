@@ -4,7 +4,6 @@ from random import randint
 
 
 def svm_test(smo):
-
     from sklearn.datasets import make_moons, make_circles, make_classification
     from sklearn.model_selection import train_test_split
 
@@ -65,9 +64,10 @@ class own_smo_simple:
         self.X_train = None
         self.y_train = None
         self.alpha = None
+        self.n_test_samples = 0
         self.b = 0.
 
-    def fit(self, X_train, y_train, max_passes=10, tol=1e-3):
+    def fit(self, X_train, y_train, max_passes=10, tol=1e-6):
         # Convert arguments to numpy arrays if they are in pandas datastructures
         if type(X_train) == pd.DataFrame:
             self.X_train = X_train.as_matrix()
@@ -75,26 +75,27 @@ class own_smo_simple:
             self.y_train = y_train.as_matrix()
 
         # Create array for storing the alpha values
-        self.alpha = np.zeros(len(y_train))
+        self.n_test_samples = len(y_train)
+        self.alpha = np.zeros(self.n_test_samples)
 
         passes = 0 # Counting runs without changing a value
         while passes < max_passes:
             changed_alpha = False
 
-            for i in range(len(self.y_train)):
+            for i in range(self.n_test_samples):
                 E_i = self.dec_func(i) - self.y_train[i]
+
                 if (self.y_train[i] * E_i < -tol and self.alpha[i] < self.C) or \
                         (self.y_train[i] * E_i > tol and self.alpha[i] > 0):
 
-                    j = randint(0, len(y_train) - 1)
+                    j = randint(0, self.n_test_samples - 1)
 
                     # Saving old alphas
                     a_i_old = self.alpha[i]
                     a_j_old = self.alpha[j]
 
                     E_j = self.dec_func(j) - self.y_train[j]
-                    L = self.calc_L(i, j)
-                    H = self.calc_H(i, j)
+                    L, H = self.calc_bonds(i, j)
 
                     if L == H:
                         continue
@@ -132,22 +133,20 @@ class own_smo_simple:
 
             passes += 1 if changed_alpha else 0
 
-    def calc_L(self, i, j):
+    def calc_bonds(self, i, j):
         if self.y_train[i] != self.y_train[j]:
-            return max(0, self.alpha[j] - self.alpha[i])
+            L = max(0, self.alpha[j] - self.alpha[i])
+            H = min(self.C, self.C + self.alpha[j] - self.alpha[i])
         else:
-            return max(0, self.alpha[i] + self.alpha[j] - self.C)
+            L = max(0, self.alpha[i] + self.alpha[j] - self.C)
+            H = min(self.C, self.alpha[i] + self.alpha[j])
 
-    def calc_H(self, i, j):
-        if self.y_train[i] != self.y_train[j]:
-            return min(self.C, self.C + self.alpha[j] - self.alpha[i])
-        else:
-            return min(self.C, self.alpha[i] + self.alpha[j])
+        return L, H
 
 
     def dec_func(self, x_ind):
-        sum = self.b
-        for i in range(len(self.y_train)):
+        sum = - self.b
+        for i in range(self.n_test_samples):
             sum += self.alpha[i] * self.y_train[i] * self.kernel_ind(i, x_ind)
 
         return sum
@@ -159,10 +158,13 @@ class own_smo_simple:
         return x.dot(y)
 
     def predict(self, X):
-        X = X.as_matrix()
+        # Convert to numpy arrays
+        if type(X) == pd.DataFrame or type(X) == pd.Series:
+            X = X.as_matrix()
+
         y = np.zeros(X.shape[0])
         for i in range(len(y)):
             y[i] = self.b
-            for j in range(len(self.y_train)):
+            for j in range(self.n_test_samples):
                 y[i] += self.alpha[j]*self.y_train[j]*self.kernel(self.X_train[j], X[i])
         return y
