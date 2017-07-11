@@ -226,3 +226,7 @@ class OwnSMOsimple:
         of the train set.
         """
         return self.kernel(self.X_train[i], self.X_train[j])
+
+    def score(self, X_test, y_test):
+        from sklearn.metrics import accuracy_score
+        return accuracy_score(y_test, self.predict(X_test), sample_weight=None)
