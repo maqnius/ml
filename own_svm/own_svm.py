@@ -84,7 +84,7 @@ class OwnSMOsimple:
 
         # QUICK AND DIRTY
         # Detect if the labels are [1, 0] instead of [1, -1] and correct them
-        if min(self.y_train) == 0:
+        if np.min(self.y_train) == 0:
             self.min_label = 0
             self.y_train = self.y_train * 2 - 1
 
@@ -226,6 +226,28 @@ class OwnSMOsimple:
         of the train set.
         """
         return self.kernel(self.X_train[i], self.X_train[j])
+
+    def get_w(self):
+        """
+        Calculates the omega vector
+        Returns
+        -------
+        w: np.array
+            Omega Vector
+        """
+        prefactor = self.y_train * self.alpha
+
+        return np.sum(self.X_train * prefactor[:, np.newaxis], axis=0)
+
+    def get_support_vectors(self):
+        """
+        Returns
+        -------
+        Returns the support vectors for each class
+        """
+        x_1 = self.X_train[np.logical_and(self.alpha > 0, self.y_train == 1.0)]
+        x_2 = self.X_train[np.logical_and(self.alpha > 0, self.y_train != 1.0)]
+        return x_1, x_2
 
     def score(self, X_test, y_test):
         from sklearn.metrics import accuracy_score
