@@ -235,9 +235,14 @@ class OwnSMOsimple:
         w: np.array
             Omega Vector
         """
-        prefactor = self.y_train * self.alpha
+        # just for testing
+        sum = 0
+        for i in range(len(self.y_train)):
+            sum += self.y_train[i] * self.X_train[i] * self.alpha[i]
+        return sum
+        #prefactor = self.y_train * self.alpha
 
-        return np.sum(self.X_train * prefactor[:, np.newaxis], axis=0)
+        #return np.sum(self.X_train * prefactor[:, np.newaxis], axis=0)
 
     def get_support_vectors(self):
         """
@@ -245,8 +250,16 @@ class OwnSMOsimple:
         -------
         Returns the support vectors for each class
         """
-        x_1 = self.X_train[np.logical_and(self.alpha > 0, self.y_train == 1.0)]
-        x_2 = self.X_train[np.logical_and(self.alpha > 0, self.y_train != 1.0)]
+        # just for testing
+        x_1 = []
+        x_2 = []
+        for i in range(self.y_train):
+            if self.alpha[i] > 0 and self.y_train[i] == 1.0:
+                x_1.append(self.X_train[i])
+            if self.alpha[i] > 0 and self.y_train[i] == -1.0:
+                x_2.append(self.X_train[i])
+        #x_1 = self.X_train[np.logical_and(self.alpha > 0, self.y_train == 1.0)]
+        #x_2 = self.X_train[np.logical_and(self.alpha > 0, self.y_train != 1.0)]
         return x_1, x_2
 
     def score(self, X_test, y_test):
