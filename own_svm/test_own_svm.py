@@ -48,7 +48,7 @@ def svm_test(smo):
 
     # Create test
     clf = smo(C = 1.0)
-    clf.fit(X_train, y_train)
+    clf.fit(X_all, y_all)
 
     predictions = clf.predict(X_test)
 
@@ -56,11 +56,6 @@ def svm_test(smo):
 
     y_test = y_test.as_matrix()
     assert(np.array_equal(predictions, y_test))
-
-
-#def test_own_smo():
-#    svm_test(own_smo)
-
 
 def test_own_smo_simple():
     svm_test(OwnSMOsimple)
