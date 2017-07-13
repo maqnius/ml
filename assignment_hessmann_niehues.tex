@@ -1,6 +1,6 @@
 \input{header}											% bindet Header ein (WICHTIG)
 
-
+\usepackage{booktabs}
 \setsansfont{Source Sans Pro}
 \setmainfont{Source Sans Pro}
 
@@ -20,6 +20,9 @@ bibwarn=true, %Probleme mit den Daten, die Backend betreffen anzeigen
 isbn=false, %keine isbn anzeigen
 url=false %keine url anzeigen
 }
+
+\renewcommand{\arraystretch}{1.2} % more whitespace in tables
+\usepackage{array} % Being able to format columns of tables
 
 \addbibresource{lit.bib} %Bibliographiedateien laden
 
@@ -43,25 +46,23 @@ Inspired by sample solutions from the website, we first took a deeper look on th
 The given dataset consists of a CSV-file containing data of 891 passengers. The dataset contains an ID for every passenger, a label if the passenger has survived the disaster and the features that are described in table \ref{tab:features}. It can be noticed that some of the features are incomplete.
 
 \begin{table}
-\begin{tabular}{|l|l|c|}
-\hline
-Feature & Description & Missing Data (\%) \\ \hline
-PassengerId & Unique ID for every passenger & 0.0 \\ \hline
-Survived & Survived (1) or died (0) & 0.0 \\ \hline
-Pclass & Passenger's class & 0.0 \\ \hline
-Name & Passenger's name & 0.0 \\ \hline
-Sex & Passenger's sex & 0.0 \\ \hline
-Age & Passenger's age & 19.87 \\ \hline
-SibSp & Number of siblings/spouses aboard & 0.0 \\ \hline
-Parch & Number of parents/children aboard & 0.0 \\ \hline
-Ticket & Ticket number & 0.0 \\ \hline
-Fare & Ticket-price & 0.0 \\ \hline
-Cabin & Number of the passenger's cabin & 77.10 \\ \hline
-Embarked & Port of embarkation & 0.22\\ \hline
+\caption{Features and their amount of missing data.}
+\begin{tabular}{>{\bfseries}l l l}
+PassengerId & Unique ID for every passenger & 0.0 \%\\
+Survived & Survived (1) or died (0) & 0.0 \% \\
+Pclass & Passenger's class & 0.0 \% \\
+Name & Passenger's name & 0.0 \% \\
+Sex & Passenger's sex & 0.0 \% \\
+Age & Passenger's age & \textbf{19.87 \%} \\
+SibSp & Number of siblings/spouses aboard & 0.0 \% \\
+Parch & Number of parents/children aboard & 0.0 \% \\
+Ticket & Ticket number & 0.0 \% \\
+Fare & Ticket-price & 0.0 \% \\
+Cabin & Number of the passenger's cabin & \textbf{77.10 \%} \\
+Embarked & Port of embarkation & \textbf{0.22 \%} \\
 \end{tabular}
 \centering
 \label{tab:features}
-\caption{Description of the dataset.}
 \end{table}
 
 After loading the dataset, it is necessary to process the data for our learning machine. Therefore the different features will be investigated to select meaningful features and the missing data needs to be handled.
