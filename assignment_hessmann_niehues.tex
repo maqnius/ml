@@ -1,32 +1,8 @@
-\input{header}											% bindet Header ein (WICHTIG)
-
-\usepackage{booktabs}
-\setsansfont{Source Sans Pro}
-\setmainfont{Source Sans Pro}
-
-% font declaration and title settings
-\newfontfamily\headingfont[]{Source Sans Pro Light}
-\titleformat{\chapter}[display]
-  {\huge\headingfont}{\chaptertitlename\ \thechapter}{26pt}{\Huge}
-\titleformat*{\section}{\LARGE\headingfont}
-\titleformat*{\subsection}{\Large\headingfont}
-\renewcommand{\maketitlehooka}{\headingfont}
-
-\usepackage[babel, german=quotes]{csquotes} % einfache Handhabung von quotations
-\usepackage[backend=biber]{biblatex} %biblatex mit biber laden
-\ExecuteBibliographyOptions{
-sorting=nyt, %Sortierung Autor, Titel, Jahr
-bibwarn=true, %Probleme mit den Daten, die Backend betreffen anzeigen
-isbn=false, %keine isbn anzeigen
-url=false %keine url anzeigen
-}
+\input{header}											% bindet Header ein
 
 \renewcommand{\arraystretch}{1.2} % more whitespace in tables
 \usepackage{array} % Being able to format columns of tables
-
 \addbibresource{lit.bib} %Bibliographiedateien laden
-
-
 
 \begin{document}
  
@@ -37,7 +13,7 @@ Mathematical Aspects in Machine Learning} %if necessary, replace with your cours
 \maketitle
  
 \section{Introduction}
-In the past course we dealt with the broad mathematical foundations of machine learning. To get an idea of what the consequences of those mathematical theorems and approaches are and to get in touch with the standard Python tools, we have evaluated an comparatively easy data science example found on \url{kaggle.com}. Since this was our first machine learning project, we decided to deal with an rather simple problem. The example dataset \cite{Kaggle2017} consists of the historic passenger records of the disastrous Titanic maiden voyage in 1912. The goal in this Challenge was to predict if a passenger survived the accident based on informations like for example age, sex and payed ticket fare. Therefore it is in terms of machine learning a \textbf{classification problem} with two classes: survived and not survived.
+In the past course we dealt with the broad mathematical foundations of machine learning. To get an idea of what the consequences of those mathematical theorems and approaches are and to get in touch with the standard Python tools, we have evaluated an comparatively easy data science example found on \url{kaggle.com}. Since this was our first machine learning project, we decided to deal with an rather simple problem. The example dataset \cite{Kaggle2017} consists of the historic passenger records of the disastrous Titanic maiden voyage in 1912. The goal in this Challenge was to predict if a passenger survived the accident based on informations like for example age, sex and payed ticket fare. Therefore it is in terms of machine learning a \textit{classification problem} with two classes: survived and not survived.
 
 Inspired by sample solutions from the website, we first took a deeper look on the dataset and tried to select the most significant influences by reviewing the statistical properties of the dataset. In the following we implemented an naive Sequential Minimal Optimization (SMO) algorithm and ran a few tests with them in order to finally compare the results with other machine learning algorithms.
 
@@ -95,7 +71,7 @@ To get a better understanding of what a Support Vector Machine does, we decided 
 	style=py,									% Style
 	caption={Hello World},		% Beschriftung
 	firstnumber={0},										% Start der Nummerierung
-	firstline={0}											% 1. Codezeile
+	firstline={15}											% 1. Codezeile
 ]											% letzte Codezeile
 {./own_svm/kernels.py}
 

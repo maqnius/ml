@@ -36,15 +36,29 @@
 \usepackage[					% Verlinkungen
 	colorlinks,					% farbige Schrift, statt farbiger Rahmen
 	linktocpage,				% verlinkt im Abb.Verzeichnis Seitenzahl statt Bildunterschrift
-	linkcolor=blue				% setzt Farbe der Links auf blau
+	linkcolor=blue,				% setzt Farbe der Links auf blau
+	urlcolor=blue	
 	]{hyperref}					% nur für digitale Anwendungen, url = "http://www.example.com"
 \usepackage{url}				% für Webadressen wie e-mail usw.: "\url{http://www.example.com}"
+\urlstyle{sf}
 
 \usepackage{enumerate}			% für versch. Aufzählungezeichen wie z.B. a)
 \usepackage{xspace}				% folgt ein Leerzeichen nach einem \Befehl, wird es nicht verschluckt.
 \usepackage{cancel}				% für das Durchstreichen u.a. in Matheformeln mit \cancel
 \usepackage{float}              % zum Forcieren der Position von figure-Umgebungen
 
+% Change font of document
+\setsansfont{Source Sans Pro}
+\setmainfont{Source Sans Pro}
+% font declaration and title settings
+\newfontfamily\headingfont[]{Source Sans Pro Light}
+\titleformat{\chapter}[display]
+  {\huge\headingfont}{\chaptertitlename\ \thechapter}{26pt}{\Huge}
+\titleformat*{\section}{\LARGE\headingfont}
+\titleformat*{\subsection}{\Large\headingfont}
+\renewcommand{\maketitlehooka}{\headingfont}
+
+\newfontfamily\ttfamily[]{Roboto Mono}
 % zum Zeichnen (u.a. von Graphen)
 \usepackage{fp}
 \usepackage{tikz}
@@ -205,3 +219,13 @@
 \footskip = 10ex			% Abstand zw. Fußzeile und Grundlinie letzter Textzeile
 \parindent 0pt			% verhindert Einrückung der 1. Zeile eines Absatzes
 \setkomafont{sectioning}{\rmfamily\bfseries}% setzt Ü-Schriften in Serifen, {disposition}
+
+\usepackage{booktabs}
+\usepackage[babel, german=quotes]{csquotes} % einfache Handhabung von quotations
+\usepackage[backend=biber]{biblatex} %biblatex mit biber laden
+\ExecuteBibliographyOptions{
+sorting=nyt, %Sortierung Autor, Titel, Jahr
+bibwarn=true, %Probleme mit den Daten, die Backend betreffen anzeigen
+isbn=false, %keine isbn anzeigen
+url=false %keine url anzeigen
+}
