@@ -2,27 +2,23 @@
  
 \usepackage[margin=1in]{geometry} 
 \usepackage{amsmath,amsthm,amssymb}
- 
-\newcommand{\N}{\mathbb{N}}
-\newcommand{\Z}{\mathbb{Z}}
- 
-\newenvironment{theorem}[2][Theorem]{\begin{trivlist}
-\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
-\newenvironment{lemma}[2][Lemma]{\begin{trivlist}
-\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
-\newenvironment{exercise}[2][Exercise]{\begin{trivlist}
-\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
-\newenvironment{reflection}[2][Reflection]{\begin{trivlist}
-\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
-\newenvironment{proposition}[2][Proposition]{\begin{trivlist}
-\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
-\newenvironment{corollary}[2][Corollary]{\begin{trivlist}
-\item[\hskip \labelsep {\bfseries #1}\hskip \labelsep {\bfseries #2.}]}{\end{trivlist}}
- 
+\usepackage{hyperref}
+\usepackage{listings}			% Für Quellcode
+\usepackage{graphicx}
+\usepackage{tabularx}			% für Tabellen mit gleicher Spaltenbreite und automatischen
 \usepackage{fontspec}
+\defaultfontfeatures{Mapping=tex-text}
+\setsansfont{Source Sans Pro}
 \setmainfont{Source Sans Pro}
-
-
+\usepackage[babel, german=quotes]{csquotes} % einfache Handhabung von quotations
+\usepackage[backend=biber]{biblatex} %biblatex mit biber laden
+\ExecuteBibliographyOptions{
+sorting=nyt, %Sortierung Autor, Titel, Jahr
+bibwarn=true, %Probleme mit den Daten, die Backend betreffen anzeigen
+isbn=false, %keine isbn anzeigen
+url=false %keine url anzeigen
+}
+\addbibresource{lit.bib} %Bibliographiedateien laden
 
 \begin{document}
  
@@ -39,11 +35,26 @@ Mathematical Aspects in Machine Learning} %if necessary, replace with your cours
 \maketitle
  
 \section{Introduction}
-The following assignment will deal with 
+In the past course we dealt with the broad mathematical foundations of machine learning. To get an idea of what the consequences of those mathematical theorems and approaches are and to get in touch with the standard Python tools, we have evaluated an comparatively easy data science example found on \url{kaggle.com}. The example dataset \cite{Kaggle2017} consists of the historic passenger records of the disastrous Titanic maiden voyage in 1912. 
+
+\begin{figure}
+  \centering
+    \includegraphics[width=0.5\textwidth]{media_saved/benchmark}
+  \caption{Benchmark}
+  \label{fig:gull}
+\end{figure}
+
+\lstinputlisting[language=Python,									% Style
+	caption={Hello World},		% Beschriftung
+	firstnumber={0},										% Start der Nummerierung
+	firstline={0}											% 1. Codezeile
+]											% letzte Codezeile
+{./own_svm/kernels.py}
+
 
 \section{Applying Machine Learning Methods on the Titanic Disaster}
 blalba
 \section{Implementation of an easy SMO Algorithm}
 
-
+\printbibliography %hier Bibliographie ausgeben lassen
 \end{document}        

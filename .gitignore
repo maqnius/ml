@@ -15,3 +15,11 @@ out/
 own_svm/.cache
 own_svm/__pycache__
 
+*.bbl
+*.bcf
+*.blg
+*.xml
+*.bak
+*.bbl
+*.blg
+*.aux
