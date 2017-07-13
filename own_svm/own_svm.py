@@ -236,7 +236,6 @@ class OwnSMOsimple:
             Omega Vector
         """
         prefactor = self.y_train * self.alpha
-
         return np.sum(self.X_train * prefactor[:, np.newaxis], axis=0)
 
     def get_support_vectors(self):
@@ -245,8 +244,10 @@ class OwnSMOsimple:
         -------
         Returns the support vectors for each class
         """
+
         x_1 = self.X_train[np.logical_and(self.alpha > 1e-1, self.y_train == 1.0)]
         x_2 = self.X_train[np.logical_and(self.alpha > 1e-1, self.y_train == -1.0)]
+
         return x_1, x_2
 
     def score(self, X_test, y_test):
