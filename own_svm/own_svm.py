@@ -61,7 +61,7 @@ class OwnSMOsimple:
         ----------
         X_train: Numpy Array or Pandas Data Set
             Training Data Set
-        y_train: Numpy Array oder Pandas Series
+        y_train: numpy.ndarray Array oder Pandas Series
             Labels for Training
         max_passes: int
             Maximal Number of runs without any change in the alpha values that
@@ -245,8 +245,8 @@ class OwnSMOsimple:
         -------
         Returns the support vectors for each class
         """
-        x_1 = self.X_train[np.logical_and(self.alpha > 0, self.y_train == 1.0)]
-        x_2 = self.X_train[np.logical_and(self.alpha > 0, self.y_train != 1.0)]
+        x_1 = self.X_train[np.logical_and(self.alpha > 1e-1, self.y_train == 1.0)]
+        x_2 = self.X_train[np.logical_and(self.alpha > 1e-1, self.y_train == -1.0)]
         return x_1, x_2
 
     def score(self, X_test, y_test):
