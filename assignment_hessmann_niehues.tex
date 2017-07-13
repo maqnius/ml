@@ -48,8 +48,18 @@ Inspired by sample solutions from the website, we first took a deeper look on th
 
 \section{Applying Machine Learning Methods on the Titanic Disaster}
 blalba
-\section{Implementation of an easy SMO Algorithm}
 
+\section{Implementation of an easy SMO Algorithm}
+To get a better understanding of what a Support Vector Machine does, we decided to implement one on our own using several publications. Most of them were based on the important paper of Platt \cite{platt} where he introduced a new approach for the calculation of the Support Vectors that improves the performance a lot. This algorithm is called Sequential Minimal Optimization. Performance was not the highest priority for us but instead understandability and the costs of implementation. Therefore we implemented a less complex version of the algorithm presented in Platt's paper.
+
+
+\section{Appendix}
+\begin{figure}
+  \centering
+    \includegraphics[width=0.8\textwidth]{media_saved/pseudo_code}
+  \caption{Pseudo Code of the SMO algorithm. Taken from: \cite{smo}}
+  \label{fig:gull}
+\end{figure}
 
 \lstinputlisting[
 	style=py,									% Style
@@ -59,6 +69,6 @@ blalba
 ]											% letzte Codezeile
 {./own_svm/kernels.py}
 
-
+\newpage
 \printbibliography %hier Bibliographie ausgeben lassen
 \end{document}        
