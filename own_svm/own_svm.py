@@ -245,8 +245,8 @@ class OwnSMOsimple:
         Returns the support vectors for each class
         """
 
-        x_1 = self.X_train[np.logical_and(self.alpha > 1e-1, self.y_train == 1.0)]
-        x_2 = self.X_train[np.logical_and(self.alpha > 1e-1, self.y_train == -1.0)]
+        x_1 = self.X_train[np.logical_and(self.alpha > 0, self.y_train == 1.0)]
+        x_2 = self.X_train[np.logical_and(self.alpha > 0, self.y_train == -1.0)]
 
         return x_1, x_2
 
