@@ -41,7 +41,7 @@ Embarked & Port of embarkation & \textbf{0.22 \%} \\
 \label{tab:features}
 \end{table}
 
-After loading the dataset, it is necessary to process the data for our learning machine. Therefore the different features will be investigated to select meaningful features and the missing data needs to be handled.
+After loading the dataset it is necessary to process the data for our learning machine. Therefore the different features will be investigated to select meaningful features and the missing data needs to be handled.
 
 \subsection{Feature: Sex}
 The sex-feature divides the passengers into the categories 'female' and 'male'. Figure \ref{fig:sexfeat} shows the probability of survival for male and female passengers. It is obvious that females had a much higher probability to survive than the male passengers. 'Sex' seems to be a useful feature for the learning machine.
@@ -56,7 +56,42 @@ The sex-feature divides the passengers into the categories 'female' and 'male'. 
 The impact of a passengers' age on their probability to survive categorized by their sex is pointed out 
 
 \section{Implementation of an easy SMO Algorithm}
-To get a better understanding of what a Support Vector Machine does, we decided to implement one on our own using several publications. Most of them were based on the important paper of Platt \cite{platt} where he introduced a new approach for the calculation of the Support Vectors that improves the performance a lot. This algorithm is called Sequential Minimal Optimization. Performance was not the highest priority for us but instead understandability and the costs of implementation. Therefore we implemented a less complex version of the algorithm presented in Platt's paper.
+To get a better understanding of what a Support Vector Machine does we decided to implement one on our own using several publications. Most of them were based on the important paper of Platt \cite{platt} where he introduced a new approach for the calculation of the Support Vectors that improves the performance a lot. This algorithm is called Sequential Minimal Optimization. Performance was not the highest priority for us but instead understandability and the costs of implementation. Therefore we implemented a less complex version of the algorithm presented in Platt's paper.
+
+As the mathematical background of the SVMs has been explained in the lecture and might be considered a standard solution for machine learning, the following introduction focuses on the main equations.
+
+The initial problem is a linear separable dataset with the labels $y_i \in \{-1, 1\}$. The classifier that the SVM is supposed to compute will have the form
+
+\begin{equation}
+    f(x) = <\omega, x> + b
+\end{equation}
+
+Now suppose we have a separating hyperplane and $w$ is perpendicular. The main task of the SVM is to maximise the closest perpendicular distance between the hyperplane and the two classes. This is down by the following constraints
+
+\begin{align}
+f(x) &\geq 1\ \text{for $y_i = +1$} \\
+f(x) &\leq 1\ \text{for $y_i = -1$}
+\end{align}
+
+Consequently do points that lie on the hyperplane satisfy $f(x)=0$.
+
+From these set of equations follows that the minimal distance from the hyperplane to one of the datapoints is $d=\frac{1}{|\omega|}$ which shall be maximized. Introducing an additional factor that allows but penalizes non separable noise and reformulating the problem with Lagrange multipliers (the $\alpha _i$) we get the following problem:
+
+\begin{align}
+\text{max}_\alpha& W(\alpha) = \sum_{i=1}^m \alpha _i - \frac{1}{2} \sum_{i=1}^m \sum_{j=1}^m y^{(i)} y^{(j)} \alpha _i <x^{(i)}, x^{(j)}> \\
+\text{subject to \em} & 0\leq \alpha _i \leq C, i = 1,..., m \\
+& \sum_{i=1}^m \alpha _i y^{(i)} = 0
+\end{align}
+
+For the presented problem the Kuhn Tucker conditions define the $\alpha _i$ that represent an optimal solution. The KKT conditions are
+
+\begin{align}
+\alpha _i = 0 & \implies  y^{(i)}(<\omega, x^{(i)}> + b)  \geq 1 \\
+\alpha _i = C & \implies  y^{(i)}(<\omega, x^{(i)}> + b)  \leq 1 \\
+0 \geq \alpha _i \geq C & \implies  y^{(i)}(<\omega, x^{(i)}> + b)  = 1 
+\end{align}
+
+The 
 
 \section*{Appendix}
 \appendix
