@@ -53,7 +53,7 @@ class OwnSMOsimple:
         self.kernel_set = Kernels(gamma)
         self.kernel = None
 
-    def fit(self, X_train, y_train, max_passes=10, tol=1e-4, kernel="rbf"):
+    def fit(self, X_train, y_train, max_passes=10, tol=1e-8, kernel="rbf"):
         """
         Fits alpha values and the threshold b with given Training data
 
@@ -143,6 +143,12 @@ class OwnSMOsimple:
 
                     # Calculate the new value for a_i from the new value of a_j
                     a_i = a_i_old + y_i * y_j * (a_j_old - a_j)
+
+                    # Apply tolerance
+                    if a_i < tol:
+                        a_i = 0
+                    elif a_i > self.C - tol:
+                        a_i = self.C
 
                     # Calculate new threshold
                     d_a_i = y_i * (a_i - a_i_old)

@@ -1,0 +1,79 @@
+\input{header}											% bindet Header ein
+
+\renewcommand{\arraystretch}{1.2} % more whitespace in tables
+\usepackage{array} % Being able to format columns of tables
+\addbibresource{lit.bib} %Bibliographiedateien laden
+
+\begin{document}
+ 
+\title{Final Course Assignment \\ }%replace X with the appropriate number
+\author{Mark Niehues, Stefaan Hessmann \\ %replace with your name
+Mathematical Aspects in Machine Learning} %if necessary, replace with your course title
+
+\maketitle
+ 
+\section{Introduction}
+In the past course we dealt with the broad mathematical foundations of machine learning. To get an idea of what the consequences of those mathematical theorems and approaches are and to get in touch with the standard Python tools, we have evaluated an comparatively easy data science example found on \url{kaggle.com}. Since this was our first machine learning project, we decided to deal with an rather simple problem. The example dataset \cite{Kaggle2017} consists of the historic passenger records of the disastrous Titanic maiden voyage in 1912. The goal in this Challenge was to predict if a passenger survived the accident based on informations like for example age, sex and payed ticket fare. Therefore it is in terms of machine learning a \textit{classification problem} with two classes: survived and not survived.
+
+Inspired by sample solutions from the website, we first took a deeper look on the dataset and tried to select the most significant influences by reviewing the statistical properties of the dataset. In the following we implemented an naive Sequential Minimal Optimization (SMO) algorithm and ran a few tests with them in order to finally compare the results with other machine learning algorithms.
+
+\section{Applying Machine Learning Methods on the Titanic Disaster}
+\subsection{Dataset}
+The given dataset consists of a CSV-file containing data of 891 passengers. The dataset contains an ID for every passenger, a label if the passenger has survived the disaster and the features that are described in table \ref{tab:features}. It can be noticed that some of the features are incomplete.
+
+\begin{table}
+\caption{Features and their amount of missing data.}
+\begin{tabular}{>{\bfseries}l l l}
+PassengerId & Unique ID for every passenger & 0.0 \%\\
+Survived & Survived (1) or died (0) & 0.0 \% \\
+Pclass & Passenger's class & 0.0 \% \\
+Name & Passenger's name & 0.0 \% \\
+Sex & Passenger's sex & 0.0 \% \\
+Age & Passenger's age & \textbf{19.87 \%} \\
+SibSp & Number of siblings/spouses aboard & 0.0 \% \\
+Parch & Number of parents/children aboard & 0.0 \% \\
+Ticket & Ticket number & 0.0 \% \\
+Fare & Ticket-price & 0.0 \% \\
+Cabin & Number of the passenger's cabin & \textbf{77.10 \%} \\
+Embarked & Port of embarkation & \textbf{0.22 \%} \\
+\end{tabular}
+\centering
+\label{tab:features}
+\end{table}
+
+After loading the dataset, it is necessary to process the data for our learning machine. Therefore the different features will be investigated to select meaningful features and the missing data needs to be handled.
+
+\subsection{Feature: Sex}
+The sex-feature divides the passengers into the categories 'female' and 'male'. Figure \ref{fig:sexfeat} shows the probability of survival for male and female passengers. It is obvious that females had a much higher probability to survive than the male passengers. 'Sex' seems to be a useful feature for the learning machine.
+ \begin{figure}
+ 	\centering
+    \includegraphics[width=0.5\textwidth]{media_saved/sex_survived}
+  \caption{Survival probability depending on the passenger's sex.}
+  \label{fig:sexfeat}
+ \end{figure}
+
+\subsection{Feature: Age}
+The impact of a passengers' age on their probability to survive categorized by their sex is pointed out 
+
+\section{Implementation of an easy SMO Algorithm}
+To get a better understanding of what a Support Vector Machine does, we decided to implement one on our own using several publications. Most of them were based on the important paper of Platt \cite{platt} where he introduced a new approach for the calculation of the Support Vectors that improves the performance a lot. This algorithm is called Sequential Minimal Optimization. Performance was not the highest priority for us but instead understandability and the costs of implementation. Therefore we implemented a less complex version of the algorithm presented in Platt's paper.
+
+\section*{Appendix}
+\appendix
+\section{Pseudo Code of the SMO algorithm}
+\begin{figure}[!h]
+  \centering
+    \includegraphics[width=0.8\textwidth]{media_saved/pseudo_code}
+  \label{fig:gull}
+\end{figure}
+
+\section{Code}
+\lstinputlisting[
+	style=py,									% Style
+	firstnumber={0},										% Start der Nummerierung
+	firstline={15}											% 1. Codezeile
+]											% letzte Codezeile
+{./own_svm/kernels.py}
+
+\printbibliography %hier Bibliographie ausgeben lassen
+\end{document}        
