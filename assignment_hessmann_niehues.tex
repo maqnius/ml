@@ -91,7 +91,30 @@ For the presented problem the Kuhn Tucker conditions define the $\alpha _i$ that
 0 \geq \alpha _i \geq C & \implies  y^{(i)}(<\omega, x^{(i)}> + b)  = 1 
 \end{align}
 
-The 
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.32\textwidth}
+        \includegraphics[width=\textwidth]{media_saved/own_test_mpasses_1.pdf}
+        \caption{\texttt{max\_passes=1}}
+        \label{fig:max_passs_1}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+      %(or a blank line to force the subfigure onto a new line)
+    \begin{subfigure}[b]{0.32\textwidth}
+        \includegraphics[width=\textwidth]{media_saved/own_test_mpasses_15.pdf}
+        \caption{\texttt{max\_passes=15}}
+        \label{fig:max_pass_15}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+    %(or a blank line to force the subfigure onto a new line)
+    \begin{subfigure}[b]{0.32\textwidth}
+        \includegraphics[width=\textwidth]{media_saved/own_test_mpasses_30.pdf}
+        \caption{\texttt{max\_passes=30}}
+        \label{fig:max_pass_30}
+    \end{subfigure}
+    \caption{Result of our SVM depending on number of loops without any chaning $\alpha$ that terminate the alogrithm.}\label{fig:max_passes}
+\end{figure}
 
 \section*{Appendix}
 \appendix
