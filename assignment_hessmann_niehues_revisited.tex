@@ -172,7 +172,7 @@ A big part of the actual publication from Platt deals with the heuristic of how 
 
 Nevertheless, in this assignment a very simple heuristic is implemented in order to keep the code simple and understandable: the pairs are just purely randomly selected.
 
-Fig. \ref{fig:pseudo} in the Appendix shows the pseudo code of our implementation. Basically the algorithm consists of an outer and inner loop. The inner loop iterates through the $alpha _i$ and checks weather it violates the KKT conditions. If this is the case, randomly a second parameter $\alpha _j$ is selected and will be adjusted using that the optimal $\alpha _j$ is given by
+Fig. \ref{fig:pseudo} in the Appendix shows the pseudo code of our implementation. Basically the algorithm consists of an outer and inner loop. The inner loop iterates through the $\alpha _i$ and checks weather it violates the KKT conditions. If this is the case, randomly a second parameter $\alpha _j$ is selected and will be adjusted using that the optimal $\alpha _j$ is given by
 \begin{equation}
 \alpha^{'}_j = \alpha _j  - \frac{y^{(j)} (E_i - E_j)}{\eta}
 \end{equation}
@@ -195,7 +195,7 @@ On the other hand and less surprisingly, the performance is quite poor compared 
 \begin{figure}
   \centering
     \includegraphics[width=0.4\textwidth]{media_saved/benchmark}
-  \caption{Comparison the self made implementation and the optimized SciKit implementation. The different intercepts ($\delta ~ 6$) as well as the different slopes (factor $1.6$) express the smaller prefactor and exponent of runtime of the SciKit's implementation.}  
+  \caption{Comparison the self made implementation and the optimized SciKit implementation. The different intercepts ($\Delta \approx 6$) as well as the different slopes (factor $1.6$) express the smaller prefactor and exponent of runtime of the SciKit's implementation.}  
   \label{fig:benchmark}  
 \end{figure}
 
@@ -230,7 +230,7 @@ It turned out that the quality of the result heavily depends on the parameter th
 \section{Summary}
 We were able to apply our knowledge from class on a simple example problem and thereby extend it with practical skills such as analysing and optimizing features, using the SciKit Framework and dealing with missing data. Additionally we gained deeper insight into one Machine Learning algorithm and were able to point out one critical factor for its performance.
 
-\pagebreak
+\clearpage
 \appendix
 \section*{Appendix}
 \section{Figures}
@@ -240,12 +240,14 @@ We were able to apply our knowledge from class on a simple example problem and t
      \caption{Survival probability depending on the passenger's age and sex.}
      \label{fig:agesexfeat}
 \end{figure}
-\begin{figure}
+\begin{figure}[h]
 \centering
 \includegraphics[width=0.5\textwidth]{media_saved/correlation_map}
      \caption{Correlation map of the dataset.}
      \label{fig:correlationmap}
 \end{figure}
+
+\newpage
 \section{Pseudo Code of the SMO algorithm}
 \begin{figure}[!h]
   \centering
@@ -276,6 +278,7 @@ We were able to apply our knowledge from class on a simple example problem and t
 \end{SCfigure}
 \fi
 %%% Stop ignorance %%%
+\clearpage
 
 \printbibliography %hier Bibliographie ausgeben lassen
 \end{document}      
