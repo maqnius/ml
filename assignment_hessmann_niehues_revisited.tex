@@ -77,7 +77,7 @@ Secondly, the wealth of a passenger expressed in the passengers Class and the fa
  
 \subsection*{Feature: Age}
 The survival distributions in function of the passengers' ages are pointed out in figure \ref{fig:agesexfeat} in the Appendix. The plot shows that children under twelve years were most likely to survive, whereas older children and young adults until about 30 years had bad chances.\\ 
-If we categorize the survival distribution depending on the age additionally by the sex feature as shown in figure \ref{fig:agesexfeat}, it turns out that young male passengers were likely to survive while males between about 12 and 30 years were unlikely to survive. This effect is inverted for females. From this follows that age is a feature that can have influence on the predictions of our learning machine, especially if it is combined with the sex feature (see Chapter MISSING VALUES).
+If we categorize the survival distribution depending on the age additionally by the sex feature as shown in figure \ref{fig:agesexfeat}, it turns out that young male passengers were likely to survive while males between about 12 and 30 years were unlikely to survive. This effect is inverted for females. From this follows that age is a feature that can have influence on the predictions of our learning machine, especially if it is combined with the sex feature (see Chapter \ref{sec:missingdata}).
 
 
  
@@ -119,6 +119,7 @@ The given dataset also contains a list of the passenger-names that have been inv
 \end{figure}
 
 \subsection{Missing Data}
+\label{sec:missingdata}
 The features 'Cabin', 'Age' and 'Embarked' of our dataset are incomplete. In order to use these features for a learning machine one needs to handle the missing data. For the cabin feature this was already done by classifying the data into 'preserved' and 'lost'.\\
 The embarked feature lacks under 1 \% of data so that these datasets can be dropped.\\
 
