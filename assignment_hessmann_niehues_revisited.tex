@@ -66,14 +66,9 @@ Secondly, the wealth of a passenger expressed in the passengers Class and the fa
     \caption{Relation between several features and the survival rate.}
 \end{figure}
 
- \begin{figure}
- \centering
-     \includegraphics[width=0.5\textwidth]{media_saved/age_all}
-     \caption{Survival probability depending on the passenger's age and sex.}
-     \label{fig:agesexfeat}
-\end{figure}
+
 \begin{figure}
-\includegraphics[width=0.5\textwidth]{media_saved/age_sex}
+\includegraphics[width=0.7\textwidth]{media_saved/age_sex}
  \centering
 
      \caption{Survival probability depending on the passenger's age and sex.}
@@ -81,7 +76,7 @@ Secondly, the wealth of a passenger expressed in the passengers Class and the fa
  \end{figure}
  
 \subsection*{Feature: Age}
-The survival distributions in function of the passengers' ages are pointed out in figure \ref{fig:agesexfeat}. The plot shows that children under twelve years were most likely to survive, whereas older children and young adults until about 30 years had bad chances.\\ 
+The survival distributions in function of the passengers' ages are pointed out in figure \ref{fig:agesexfeat} in the Appendix. The plot shows that children under twelve years were most likely to survive, whereas older children and young adults until about 30 years had bad chances.\\ 
 If we categorize the survival distribution depending on the age additionally by the sex feature as shown in figure \ref{fig:agesexfeat}, it turns out that young male passengers were likely to survive while males between about 12 and 30 years were unlikely to survive. This effect is inverted for females. From this follows that age is a feature that can have influence on the predictions of our learning machine, especially if it is combined with the sex feature (see Chapter MISSING VALUES).
 
 
@@ -206,21 +201,23 @@ It turned out that the quality of the result heavily depends on the parameter th
 
 \begin{figure}
     \centering
-    \begin{subfigure}[b]{0.32\textwidth}
+    \begin{subfigure}[b]{0.28\textwidth}
         \includegraphics[width=\textwidth]{media_saved/own_test_mpasses_1.pdf}
         \caption{\texttt{max\_passes=1}}
         \label{fig:max_passs_1}
     \end{subfigure}
+    \quad
     ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
       %(or a blank line to force the subfigure onto a new line)
-    \begin{subfigure}[b]{0.32\textwidth}
+    \begin{subfigure}[b]{0.28\textwidth}
         \includegraphics[width=\textwidth]{media_saved/own_test_mpasses_15.pdf}
         \caption{\texttt{max\_passes=15}}
         \label{fig:max_pass_15}
     \end{subfigure}
+    \quad
     ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
     %(or a blank line to force the subfigure onto a new line)
-    \begin{subfigure}[b]{0.32\textwidth}
+    \begin{subfigure}[b]{0.28\textwidth}
         \includegraphics[width=\textwidth]{media_saved/own_test_mpasses_30.pdf}
         \caption{\texttt{max\_passes=30}}
         \label{fig:max_pass_30}
@@ -234,6 +231,13 @@ We were able to apply our knowledge from class on a simple example problem and t
 \pagebreak
 \appendix
 \section*{Appendix}
+\section{Figures}
+ \begin{figure}[h]
+ \centering
+     \includegraphics[width=0.5\textwidth]{media_saved/age_all}
+     \caption{Survival probability depending on the passenger's age and sex.}
+     \label{fig:agesexfeat}
+\end{figure}
 \section{Pseudo Code of the SMO algorithm}
 \begin{figure}[!h]
   \centering
