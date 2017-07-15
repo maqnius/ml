@@ -1,0 +1,268 @@
+\input{header}											% bindet Header ein
+
+\renewcommand{\arraystretch}{1.2} % more whitespace in tables
+\usepackage{array} % Being able to format columns of tables
+\addbibresource{lit.bib} %Bibliographiedateien laden
+
+\begin{document}
+ 
+\title{Final Course Assignment \\ }%replace X with the appropriate number
+\author{Mark Niehues, Stefaan Hessmann \\ %replace with your name
+Mathematical Aspects in Machine Learning} %if necessary, replace with your course title
+
+\maketitle
+ 
+\section{Introduction}
+In the past course we dealt with the broad mathematical foundations of machine learning. To get an idea of what the consequences of those mathematical theorems and approaches are and to get in touch with the standard Python tools, we have evaluated an comparatively easy data science example found on \url{kaggle.com}. The example dataset \cite{Kaggle2017} consists of the historic passenger records of the disastrous Titanic maiden voyage in 1912. The goal in this challenge was to predict if a passenger survived the accident based on informations like for example age, sex and payed ticket fare. Therefore it is in terms of machine learning a \textit{classification problem} with two classes: survived and not survived.
+
+Inspired by sample solutions from the website, we first took a deeper look on the dataset and tried to select the most significant influences by reviewing the statistical properties of the dataset. In the following we implemented an naive Sequential Minimal Optimization (SMO) algorithm and ran a few tests with them in order to finally compare the results with other machine learning algorithms.
+
+\section{Applying Machine Learning Methods on the Titanic Disaster}
+\subsection{Dataset}
+The given dataset consists of a CSV-file containing data of 891 passengers. The dataset contains an ID for every passenger, a label if the passenger has survived the disaster and the features that are described in table \ref{tab:features}. It can be noticed that some of the features are incomplete.
+
+\begin{table}
+\caption{Features and their amount of missing data.}
+\begin{tabular}{>{\bfseries}l l l}
+PassengerId & Unique ID for every passenger & 0.0 \%\\
+Survived & Survived (1) or died (0) & 0.0 \% \\
+Pclass & Passenger's class & 0.0 \% \\
+Name & Passenger's name & 0.0 \% \\
+Sex & Passenger's sex & 0.0 \% \\
+Age & Passenger's age & \textbf{19.87 \%} \\
+SibSp & Number of siblings/spouses aboard & 0.0 \% \\
+Parch & Number of parents/children aboard & 0.0 \% \\
+Ticket & Ticket number & 0.0 \% \\
+Fare & Ticket-price & 0.0 \% \\
+Cabin & Number of the passenger's cabin & \textbf{77.10 \%} \\
+Embarked & Port of embarkation & \textbf{0.22 \%} \\
+\end{tabular}
+\centering
+\label{tab:features}
+\end{table}
+
+After loading the dataset, it is necessary to process the data for our learning machine. Therefore the different features will be investigated to select meaningful features and the missing data needs to be handled.
+
+\subsection{Feature: Sex}
+The sex-feature divides the passengers into the categories 'female' and 'male'. Figure \ref{fig:sexfeat} shows the probability of survival for male and female passengers. It is obvious that females had a much higher probability to survive than the male passengers. 'Sex' seems to be a useful feature for the learning machine.
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+     \includegraphics[width=\textwidth]{media_saved/embarkation_survived}
+     \caption{Survival probability correlated with ports of embarkation. \\}
+     \label{fig:embarkationfeat}
+    \end{subfigure}
+    \quad
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{media_saved/cabin_survived}
+     \caption{Correlation between preservation of cabin number and survival rate.}
+     \label{fig:cabinfeat}
+    \end{subfigure}
+    \quad
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{media_saved/sex_survived}
+  \caption{Survival probability depending on the passenger's sex.\\}
+  \label{fig:sexfeat}
+    \end{subfigure}
+    \caption{Relation between several features and the survival rate.}
+\end{figure}
+
+
+\subsection{Feature: Age}
+The survival distributions in function of the passengers' ages are pointed out in figure \ref{fig:agesexfeat}. The plot shows that children under twelve years were most likely to survive, whereas older children and young adults until about 30 years had bad chances. The chance for adults above their thirties to be rescued is nearly independent of their exact age at about 50 percent.\\ If we categorize the survival distribution depending on the age additionally by the sex feature as shown in figure \ref{fig:agesexfeat}, it turns out that the age has different effect on the survival probabilities of females and males. Young male passengers were likely to survive while males between about 12 and 30 years were unlikely to survive. This effect is inverted for females, where young girls had fewer chances to be rescued than females between about 25 and 40 years. From this it follows that age is a feature that can have influence on the predictions of our learning machine. Especially if it is combined with the sex feature. The missing values of the age dataset will be handled after the inspection of the other features.
+
+ \begin{figure}
+
+ \centering
+     \includegraphics[width=0.5\textwidth]{media_saved/age_all}
+     \caption{Survival probability depending on the passenger's age and sex.}
+     \label{fig:agesexfeat}
+     \includegraphics[width=0.5\textwidth]{media_saved/age_sex}
+     \caption{Survival probability depending on the passenger's age and sex.}
+     \label{fig:ageallfeat}
+ \end{figure}
+ 
+ \subsection{Feature: Name and Title}
+The given dataset also contains a list of the passenger-names that have been involved in the titanic accident. At first sight a name does not appear to be a useful feature for our survival predictions, but the name-list contains also a persons title. Figure \ref{fig:title} shows the total number of occurrences for all titles that have been found. The titles 'Mr.', 'Master', 'Mrs.' and 'Miss' can are relatively common, whereas the other titles occur only infrequently. Therefore all other titles are grouped into a group named 'Res'. The figure also shows on the chances of survival for people with different titles on the right-handed plot. The plot points out that a persons title has an impact on the survival odds. It is obvious that there is a correlation between the title feature and the sex and the age feature.
+
+ \begin{figure}
+ \centering
+     \includegraphics[width=0.5\textwidth]{media_saved/title}
+     \caption{Total counts of the different titles (left) and survival probability in dependency of the title (right).}
+     \label{fig:title}
+ \end{figure}
+ 
+ \subsection{Feature: Port of Embarkation}
+ The titanic maiden voyage started in Southampton (S), but passengers could also be picked up in Cherbourg (C) and Queenstown (Q). The impact of the port of embarkation is displayed in figure \ref{fig:embarkationfeat}. The plot shows that passengers that joined the Titanic at Cherbourg survived relatively more often than people that embarked at other harbours. Against our expectations the port of embarkation seems to be a relevant feature for predictions about survival.
+
+ \subsection{Feature: Family Constellation}
+ The dataset contains two categories that handle family constellations. 'SibSp' contains the number of siblings and spouses a passenger was travelling with and 'Parch' contains the number of parents and children aboard. Figure \ref{fig:familyold} points out the influence of family constellations on the survival rate. The errorbars imply that the number of datasets with more than two siblings and spouses or more than two parents and children aboard is to sparse for reliable predictions. For this reason the two features are grouped to a new feature called 'Family' for every point in the dataset. This new feature holds the total number of a passengers relatives aboard which is grouped again into three categories containing people travelling alone, small families with one to three relatives aboard and big families with more than three relatives aboard. The classification into these groups was due to the similar survival rate of the number of relatives inside a class. The impact of the family feature is displayed in figure \ref{fig:familynew}. The the errorbars of the plot for the new feature are considerably smaller than before. In this way we can drop the 'SibSp' and the 'Parch' feature and replace it by the new family feature.
+ 
+   \begin{figure}
+ \centering
+     \includegraphics[width=0.5\textwidth]{media_saved/family_size_before}
+     \caption{Survival probability in dependency of the number of siblings / spouses (left) and parents / children (right) aboard.}
+     \label{fig:familyold}
+     \includegraphics[width=0.5\textwidth]{media_saved/family_size_after}
+     \caption{Total number of datasets (left) survival rate (right) for the family feature.}
+     \label{fig:familynew}
+ \end{figure}
+ 
+\subsection{Feature: Cabin Number}
+The cabin number covers information about a passengers cabin position inside the Titanic. It can be expected that the cabin position correlates with the survival rate, because cabins at the upper decks were closer to the lifeboats than cabins further down the boat hull. Unfortunately about 80 \% of the cabin numbers were not preserved. In order to use the cabin number as a feature for the learning machine it is necessary to either find a way of recovering the missing data or to drop all datasets without a cabin number. Because the amount of missing data is so large, it is not probable to find a reliable way to recover the data and dropping 80 \% of the dataset is also not an option. If we reclassify the feature into 'cabin number preserved' and 'cabin number lost' it turns out that there is a significant difference between the survival rates of these two classes. This correlation is pointed out in figure \ref{fig:cabinfeat}.
+
+\subsection{Feature: Pclass and Fare}
+The influence of prosperity on the survival rate is expressed through a passengers ticket price and the class of the cabin. The Influence of both features is correlated in figure \ref{fig:farefeat}. The fare feature was categorized into three groups of ticket prices with similar survival rates. It is obvious that rich passengers had better chances to get into a saving lifeboat than people in the cheaper classes. Both features will be used for predictions of the learning machine.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{media_saved/fare_survived}
+     \caption{Correlation between Pclass (left), Fare (right) and survival rate.}
+     \label{fig:farefeat}
+\end{figure}
+
+\subsection{Missing Data}
+The features 'Cabin', 'Age' and 'Embarked' of our dataset are incomplete. In order to use these features for a learning machine one needs to handle the missing data. For the cabin feature this was already done by classifying the data into 'preserved' and 'lost'.\\
+The embarked feature lacks under 1 \% of data so that these datasets can be dropped.\\
+
+
+
+\section{Implementation of an easy SMO Algorithm}
+\subsection{Brief Introduction}
+To get a better understanding of what a Support Vector Machine does we decided to implement one on our own using several publications. Most of them were based on the important paper of Platt \cite{platt} where he introduced a new approach for the calculation of the Support Vectors that improves the performance a lot. This algorithm is called Sequential Minimal Optimization. Performance was not the highest priority for us but instead understandability and the costs of implementation. Therefore we implemented a less complex version of the algorithm mainly based on \cite{smo}.
+
+As the mathematical background of the SVMs has been explained in the lecture and might be considered a standard solution for machine learning, the following introduction focuses on the main equations.
+
+The initial problem is a linear separable dataset with the labels $y_i \in \{-1, 1\}$. The classifier that the SVM is supposed to compute will have the form
+
+\begin{equation}
+    f(x) = <\omega, x> + b
+\end{equation}
+
+Now suppose we have a separating hyperplane and $w$ is perpendicular. The main task of the SVM is to maximise the closest perpendicular distance between the hyperplane and the two classes. This is down by the following constraints
+
+\begin{align}
+f(x) &\geq 1\ \text{for $y_i = +1$} \\
+f(x) &\leq 1\ \text{for $y_i = -1$}
+\end{align}
+
+Consequently do points that lie on the hyperplane satisfy $f(x)=0$.
+
+From these set of equations follows that the minimal distance from the hyperplane to one of the datapoints is $d=\frac{1}{|\omega|}$ which shall be maximized. Introducing an additional factor that allows but penalizes non separable noise and reformulating the problem with Lagrange multipliers (the $\alpha _i$) we get the following problem:
+
+\begin{align}
+\text{max}_\alpha& W(\alpha) = \sum_{i=1}^m \alpha _i - \frac{1}{2} \sum_{i=1}^m \sum_{j=1}^m y^{(i)} y^{(j)} \alpha _i <x^{(i)}, x^{(j)}> \\
+\text{subject to \em} & 0\leq \alpha _i \leq C, i = 1,..., m \\
+& \sum_{i=1}^m \alpha _i y^{(i)} = 0 \label{eq:sumalpha}
+\end{align}
+
+For the presented problem the Kuhn Tucker conditions define the $\alpha _i$ that represent an optimal solution. The KKT conditions are
+
+\begin{align}
+\alpha _i = 0 & \implies  y^{(i)}(<\omega, x^{(i)}> + b)  \geq 1 \\
+\alpha _i = C & \implies  y^{(i)}(<\omega, x^{(i)}> + b)  \leq 1 \\
+0 \geq \alpha _i \geq C & \implies  y^{(i)}(<\omega, x^{(i)}> + b)  = 1 \label{eq:alphabounds}
+\end{align}
+
+To deal with linearly non separable data, the scalar products can be replaced by kernel functions $kernel(x_i, x_j)$.
+
+\subsection{Description of the Implementation}
+Instead of trying to maximize the whole set of $\alpha$ the SMO algorithm exploits that the maximum will be reached when pairs $\alpha _i, \alpha _j$ fulfil the KKT conditions (while it needs to be at least a pair, since the conditions imply linearity of two $\alpha$ values). Thus the SMO algorithm selects two $\alpha$ parameters (that do not meet the KKT conditions) and optimizes them. Afterwards the threshold gets adjusted according to the new values.
+
+A big part of the actual publication from Platt deals with the heuristic of how two choose the $\alpha _i$ and $\alpha _j$ since this is a critical factor for the pace of its convergence as the number of possible pairs in a setup with $m$ features is $m(m-1)$. Accordingly the amount of time it takes to find the \textit{critical} values is decisive for the algorithms performance.
+
+Nevertheless, in this assignment a very simple heuristic is implemented in order to keep the code simple and understandable: the pairs are just purely randomly selected.
+
+Fig. \ref{fig:pseudo} in the Appendix shows the pseudo code of our implementation. Basically the algorithm consists of an outer and inner loop. The inner loop iterates through the $alpha _i$ and checks weather it violates the KKT conditions. If this is the case, randomly a second parameter $\alpha _j$ is selected and will be adjusted using that the optimal $\alpha _j$ is given by
+\begin{equation}
+\alpha^{'}_j = \alpha _j  - \frac{y^{(j)} (E_i - E_j)}{\eta}
+\end{equation}
+where $\eta$ can be interpreted as the second derivative of the generic function function $W(\alpha)$ \cite{smo}. $E_i$ is the current error on the sample $x_i$. After that the new parameter is cropped to boundaries that follow from equation \ref{eq:alphabounds} and \ref{eq:sumalpha}. Then the opposing parameter is calculated exploiting the linearity the threshold can be updated by using the classifier function $f(x)$ and either one $alpha$ that lays within $(0, C)$ or if this is true for both, their arithmetic mean.
+
+The outer loop counts how often the inner loop fails to find a partner for optimization or the optimization yields to no significant changes (significance is defined by the user). The algorithm terminates when a certain, user defined number of passes is reached.
+
+\subsection{Comparison with SciKit SVM}
+The implementation does not make a lot use of Numpy's vectorization skills and therefore performs poor even considering that it is Python code. Still it reaches satisfying scores with the titanic train set in comparison to other SciKit algorithms as can be seen in fig. \ref{fig:comparison}.
+
+\begin{figure}
+  \centering
+    \includegraphics[width=0.8\textwidth]{media_saved/ml_comparison}
+  \caption{Comparison of different ML Algorithms and their score using the Titanic training set and K-Fold validation.}  
+  \label{fig:comparison}  
+\end{figure}
+
+On the other hand and less surprisingly, the performance is quite poor compared to the SVM Module from the SciKit framework\footnote{\url{http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html}}. One can deduce from figure \ref{fig:benchmark} that the prefactor as well as the exponential behaviour is significantly worse.
+
+\begin{figure}
+  \centering
+    \includegraphics[width=0.4\textwidth]{media_saved/benchmark}
+  \caption{Comparison the self made implementation and the optimized SciKit implementation. The different intercepts ($\delta ~ 6$) as well as the different slopes (factor $1.6$) express the smaller prefactor and exponent of runtime of the SciKit's implementation.}  
+  \label{fig:benchmark}  
+\end{figure}
+
+It turned out that the quality of the result heavily depends on the parameter that determines after how many \textit{changeless} runs it terminates. As you can see in figure \ref{fig:max_passes}, the algorithm yields a lot support vectors that do not lie within the margin when it stops after one changeless iteration. The quality of the solution increases when the number of passes is larger. The same holds for the runtime unfortunately. This behaviour results from the optimization behaviour of the SVM which is that it only optimizes data points which lay within the margin. Since this "quickly" becomes a small number of data points it is unlikely that the random selection finds a pair to optimize.
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.32\textwidth}
+        \includegraphics[width=\textwidth]{media_saved/own_test_mpasses_1.pdf}
+        \caption{\texttt{max\_passes=1}}
+        \label{fig:max_passs_1}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+      %(or a blank line to force the subfigure onto a new line)
+    \begin{subfigure}[b]{0.32\textwidth}
+        \includegraphics[width=\textwidth]{media_saved/own_test_mpasses_15.pdf}
+        \caption{\texttt{max\_passes=15}}
+        \label{fig:max_pass_15}
+    \end{subfigure}
+    ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc. 
+    %(or a blank line to force the subfigure onto a new line)
+    \begin{subfigure}[b]{0.32\textwidth}
+        \includegraphics[width=\textwidth]{media_saved/own_test_mpasses_30.pdf}
+        \caption{\texttt{max\_passes=30}}
+        \label{fig:max_pass_30}
+    \end{subfigure}
+    \caption{Results of our SVM on a linear seperable test set depending on after how many changeless loops it terminates.}\label{fig:max_passes}
+\end{figure}
+
+\section{Summary}
+We were able to apply our knowledge from class on a simple example problem and thereby extend it with practical skills such as analysing and optimizing features, using the SciKit Framework and dealing with missing data. Additionally we gained deeper insight into one Machine Learning algorithm and were able to point out one critical factor for its performance.
+
+\pagebreak
+\appendix
+\section*{Appendix}
+\section{Pseudo Code of the SMO algorithm}
+\begin{figure}[!h]
+  \centering
+    \includegraphics[width=0.8\textwidth]{media_saved/pseudo_code}
+  \caption{Pseudo Code of the implemented SMO algorithm. Taken from\cite{smo}}  
+  \label{fig:pseudo}  
+\end{figure}
+
+\iffalse
+%%% THIS PART GETS IGNORED %%%
+\section{Code}
+\lstinputlisting[
+	label={code},
+	caption={The main procedure of the SMO algorithm},
+	style=py,									% Style
+	firstnumber={0},
+	lastline={172},										% Start der Nummerierung
+	firstline={56}											% 1. Codezeile
+]											% letzte Codezeile
+{./own_svm/own_svm.py}
+
+\begin{SCfigure}
+  \centering
+  \includegraphics[width=0.3\textwidth]%
+    {media_saved/benchmark}% picture filename
+      \caption{Comparison the self made implementation and the optimized SciKit implementation. The different intercepts ($\delta ~ 6$) as well as the different slopes (factor $1.6$) express the smaller prefactor and exponent of runtime of the SciKit's implementation.}
+      \label{fig:benchmark}  
+\end{SCfigure}
+\fi
+%%% Stop ignorance %%%
+
+\printbibliography %hier Bibliographie ausgeben lassen
+\end{document}      
