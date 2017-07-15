@@ -76,6 +76,7 @@ Secondly, the wealth of a passenger expressed in the passengers Class and the fa
  \end{figure}
  
 \subsection*{Feature: Age}
+\label{sec:age}
 The survival distributions in function of the passengers' ages are pointed out in figure \ref{fig:agesexfeat} in the Appendix. The plot shows that children under twelve years were most likely to survive, whereas older children and young adults until about 30 years had bad chances.\\ 
 If we categorize the survival distribution depending on the age additionally by the sex feature as shown in figure \ref{fig:agesexfeat}, it turns out that young male passengers were likely to survive while males between about 12 and 30 years were unlikely to survive. This effect is inverted for females. From this follows that age is a feature that can have influence on the predictions of our learning machine, especially if it is combined with the sex feature (see Chapter \ref{sec:missingdata}).
 
@@ -119,11 +120,11 @@ The given dataset also contains a list of the passenger-names that have been inv
 \end{figure}
 
 \subsection{Missing Data}
-\label{sec:missingdata}
-The features 'Cabin', 'Age' and 'Embarked' of our dataset are incomplete. In order to use these features for a learning machine one needs to handle the missing data. For the cabin feature this was already done by classifying the data into 'preserved' and 'lost'.\\
-The embarked feature lacks under 1 \% of data so that these datasets can be dropped.\\
+As already mentioned before, the dataset lacks some data for the features 'Cabin', 'Embarked' and 'Age'. In order to use these features for our learning machine it is necessary to deal with the missing data. The 'Cabin' data is mostly missing and it is not likely to find a reasonable way to estimate the data. By dividing the data into the categories 'preserved' and 'lost' as shown in figure \ref{fig:cabinfeat} it turns out that whether the data is missing or not has an effect on the survival rate. For this reason we just reclassify the feature and this already solves the missing data problem for the 'Cabin' feature. More than \mbox{99 \%} of the 'Embarked' dataset is preserved so that missing data can be discarded. Only about \mbox{80 \%} of the 'Age' data is preserved. Therefore it is worth the effort to estimate the remaining \mbox{20 \%}. As described in section \ref{sec:age} the survival rate differs for males and females in three different age categories. Additionally we can see that the age feature correlates with a passengers cabin class (see figure \ref{fig:correlationmap}) and it is obvious that a passengers title is correlated to an age. Based on this information we group all people by the titles 'Miss', 'Mrs', 'Master' and 'Mr + Res' and  furthermore by their cabin class. This leads to twelve different categories. For every category we calculate the mean age and match it to the passengers with an unknown age.\\
+This way it is possible to use more than \mbox{99 \%} of our dataset without dropping a feature.
 
-
+\subsection{Preparing the Dataset}
+Before the dataset can be used for the training of a learning machine, all non numeric features need to be transformed into numerics. If the feature can be arranged in a meaningful order all string variables are assigned to a number. This was done for the 'Family' feature. The other features ('Sex', 'Embarked', 'Title') were transformed to a binary dataset, because they could not be arranged in a meaningful way. Afterwards the features 'SibSp', 'Parch', 'Name', 'PassengerID' and 'Ticket' were dropped, because they are not useful for our learning machine. At last we scale all features on a scale between 0 and 1, so that all features have the same influence on the predictions.
 
 \section{Implementation of an easy SMO Algorithm}
 \subsection{Brief Introduction}
@@ -238,6 +239,12 @@ We were able to apply our knowledge from class on a simple example problem and t
      \includegraphics[width=0.7\textwidth]{media_saved/age_all}
      \caption{Survival probability depending on the passenger's age and sex.}
      \label{fig:agesexfeat}
+\end{figure}
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{media_saved/correlation_map}
+     \caption{Correlation map of the dataset.}
+     \label{fig:correlationmap}
 \end{figure}
 \section{Pseudo Code of the SMO algorithm}
 \begin{figure}[!h]
