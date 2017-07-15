@@ -41,10 +41,8 @@ Embarked & Port of embarkation & \textbf{0.22 \%} \\
 \label{tab:features}
 \end{table}
 
-After loading the dataset, it is necessary to process the data for our learning machine. Therefore the different features will be investigated to select meaningful features and the missing data needs to be handled.
-
-\subsection{Feature: Sex}
-The sex-feature divides the passengers into the categories 'female' and 'male'. Figure \ref{fig:sexfeat} shows the probability of survival for male and female passengers. It is obvious that females had a much higher probability to survive than the male passengers. 'Sex' seems to be a useful feature for the learning machine.
+After loading the dataset, it is necessary to process the data for our learning machine. Therefore the different features will be investigated to select meaningful features and the missing data needs to be handled. There were some features that could be used for supervised training in a more or less straight forward way. First, the sex-feature which separates the passengers in male and female. We can conclude from fig .\ref{fig:sexfeat} that 'Sex' seems to be a meaningful feature for the learning machine as females had a much higher probability to survive.\\
+Secondly, the wealth of a passenger expressed in the passengers Class and the fare he paid for the ticket has positive influence on his chance to survive. The fare feature was categorized into three groups of similar survival rates to permit overfitting (fig. \ref{fig:farefeat}). Surprisingly the port of embarkation also correlates with the survival rate as can be seen in figure \ref{fig:embarkationfeat}. Passengers that joined the Titanic at Cherbourg had higher survival chances that people who embarked at other harbours. The other features were engineered in a slightly more advanced way as described below.
 
 \begin{figure}
     \centering
@@ -68,22 +66,27 @@ The sex-feature divides the passengers into the categories 'female' and 'male'. 
     \caption{Relation between several features and the survival rate.}
 \end{figure}
 
-
-\subsection{Feature: Age}
-The survival distributions in function of the passengers' ages are pointed out in figure \ref{fig:agesexfeat}. The plot shows that children under twelve years were most likely to survive, whereas older children and young adults until about 30 years had bad chances. The chance for adults above their thirties to be rescued is nearly independent of their exact age at about 50 percent.\\ If we categorize the survival distribution depending on the age additionally by the sex feature as shown in figure \ref{fig:agesexfeat}, it turns out that the age has different effect on the survival probabilities of females and males. Young male passengers were likely to survive while males between about 12 and 30 years were unlikely to survive. This effect is inverted for females, where young girls had fewer chances to be rescued than females between about 25 and 40 years. From this it follows that age is a feature that can have influence on the predictions of our learning machine. Especially if it is combined with the sex feature. The missing values of the age dataset will be handled after the inspection of the other features.
-
  \begin{figure}
-
  \centering
      \includegraphics[width=0.5\textwidth]{media_saved/age_all}
      \caption{Survival probability depending on the passenger's age and sex.}
      \label{fig:agesexfeat}
-     \includegraphics[width=0.5\textwidth]{media_saved/age_sex}
+\end{figure}
+\begin{figure}
+\includegraphics[width=0.5\textwidth]{media_saved/age_sex}
+ \centering
+
      \caption{Survival probability depending on the passenger's age and sex.}
      \label{fig:ageallfeat}
  \end{figure}
  
- \subsection{Feature: Name and Title}
+\subsection*{Feature: Age}
+The survival distributions in function of the passengers' ages are pointed out in figure \ref{fig:agesexfeat}. The plot shows that children under twelve years were most likely to survive, whereas older children and young adults until about 30 years had bad chances.\\ 
+If we categorize the survival distribution depending on the age additionally by the sex feature as shown in figure \ref{fig:agesexfeat}, it turns out that young male passengers were likely to survive while males between about 12 and 30 years were unlikely to survive. This effect is inverted for females. From this follows that age is a feature that can have influence on the predictions of our learning machine, especially if it is combined with the sex feature (see Chapter MISSING VALUES).
+
+
+ 
+ \subsection*{Feature: Name and Title}
 The given dataset also contains a list of the passenger-names that have been involved in the titanic accident. At first sight a name does not appear to be a useful feature for our survival predictions, but the name-list contains also a persons title. Figure \ref{fig:title} shows the total number of occurrences for all titles that have been found. The titles 'Mr.', 'Master', 'Mrs.' and 'Miss' can are relatively common, whereas the other titles occur only infrequently. Therefore all other titles are grouped into a group named 'Res'. The figure also shows on the chances of survival for people with different titles on the right-handed plot. The plot points out that a persons title has an impact on the survival odds. It is obvious that there is a correlation between the title feature and the sex and the age feature.
 
  \begin{figure}
@@ -93,27 +96,25 @@ The given dataset also contains a list of the passenger-names that have been inv
      \label{fig:title}
  \end{figure}
  
- \subsection{Feature: Port of Embarkation}
- The titanic maiden voyage started in Southampton (S), but passengers could also be picked up in Cherbourg (C) and Queenstown (Q). The impact of the port of embarkation is displayed in figure \ref{fig:embarkationfeat}. The plot shows that passengers that joined the Titanic at Cherbourg survived relatively more often than people that embarked at other harbours. Against our expectations the port of embarkation seems to be a relevant feature for predictions about survival.
 
- \subsection{Feature: Family Constellation}
+ \subsection*{Feature: Family Constellation}
  The dataset contains two categories that handle family constellations. 'SibSp' contains the number of siblings and spouses a passenger was travelling with and 'Parch' contains the number of parents and children aboard. Figure \ref{fig:familyold} points out the influence of family constellations on the survival rate. The errorbars imply that the number of datasets with more than two siblings and spouses or more than two parents and children aboard is to sparse for reliable predictions. For this reason the two features are grouped to a new feature called 'Family' for every point in the dataset. This new feature holds the total number of a passengers relatives aboard which is grouped again into three categories containing people travelling alone, small families with one to three relatives aboard and big families with more than three relatives aboard. The classification into these groups was due to the similar survival rate of the number of relatives inside a class. The impact of the family feature is displayed in figure \ref{fig:familynew}. The the errorbars of the plot for the new feature are considerably smaller than before. In this way we can drop the 'SibSp' and the 'Parch' feature and replace it by the new family feature.
  
-   \begin{figure}
- \centering
-     \includegraphics[width=0.5\textwidth]{media_saved/family_size_before}
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+     \includegraphics[width=\textwidth]{media_saved/family_size_before}
      \caption{Survival probability in dependency of the number of siblings / spouses (left) and parents / children (right) aboard.}
      \label{fig:familyold}
-     \includegraphics[width=0.5\textwidth]{media_saved/family_size_after}
-     \caption{Total number of datasets (left) survival rate (right) for the family feature.}
+    \end{subfigure}
+    \quad
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{media_saved/family_size_after}
+     \caption{Total number of datasets (left) survival rate (right) for the family feature.\\}
      \label{fig:familynew}
- \end{figure}
- 
-\subsection{Feature: Cabin Number}
-The cabin number covers information about a passengers cabin position inside the Titanic. It can be expected that the cabin position correlates with the survival rate, because cabins at the upper decks were closer to the lifeboats than cabins further down the boat hull. Unfortunately about 80 \% of the cabin numbers were not preserved. In order to use the cabin number as a feature for the learning machine it is necessary to either find a way of recovering the missing data or to drop all datasets without a cabin number. Because the amount of missing data is so large, it is not probable to find a reliable way to recover the data and dropping 80 \% of the dataset is also not an option. If we reclassify the feature into 'cabin number preserved' and 'cabin number lost' it turns out that there is a significant difference between the survival rates of these two classes. This correlation is pointed out in figure \ref{fig:cabinfeat}.
-
-\subsection{Feature: Pclass and Fare}
-The influence of prosperity on the survival rate is expressed through a passengers ticket price and the class of the cabin. The Influence of both features is correlated in figure \ref{fig:farefeat}. The fare feature was categorized into three groups of ticket prices with similar survival rates. It is obvious that rich passengers had better chances to get into a saving lifeboat than people in the cheaper classes. Both features will be used for predictions of the learning machine.
+    \end{subfigure}
+    \caption{Merging the SibSP and Parch feature}
+\end{figure}
 
 \begin{figure}
 \centering
