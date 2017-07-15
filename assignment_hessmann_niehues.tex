@@ -13,7 +13,7 @@ Mathematical Aspects in Machine Learning} %if necessary, replace with your cours
 \maketitle
  
 \section{Introduction}
-In the past course we dealt with the broad mathematical foundations of machine learning. To get an idea of what the consequences of those mathematical theorems and approaches are and to get in touch with the standard Python tools, we have evaluated an comparatively easy data science example found on \url{kaggle.com}. Since this was our first machine learning project, we decided to deal with an rather simple problem. The example dataset \cite{Kaggle2017} consists of the historic passenger records of the disastrous Titanic maiden voyage in 1912. The goal in this challenge was to predict if a passenger survived the accident based on informations like for example age, sex and payed ticket fare. Therefore it is in terms of machine learning a \textit{classification problem} with two classes: survived and not survived.
+In the past course we dealt with the broad mathematical foundations of machine learning. To get an idea of what the consequences of those mathematical theorems and approaches are and to get in touch with the standard Python tools, we have evaluated an comparatively easy data science example found on \url{kaggle.com}. The example dataset \cite{Kaggle2017} consists of the historic passenger records of the disastrous Titanic maiden voyage in 1912. The goal in this challenge was to predict if a passenger survived the accident based on informations like for example age, sex and payed ticket fare. Therefore it is in terms of machine learning a \textit{classification problem} with two classes: survived and not survived.
 
 Inspired by sample solutions from the website, we first took a deeper look on the dataset and tried to select the most significant influences by reviewing the statistical properties of the dataset. In the following we implemented an naive Sequential Minimal Optimization (SMO) algorithm and ran a few tests with them in order to finally compare the results with other machine learning algorithms.
 
@@ -126,7 +126,7 @@ The embarked feature lacks under 1 \% of data so that these datasets can be drop
 
 \section{Implementation of an easy SMO Algorithm}
 \subsection{Brief Introduction}
-To get a better understanding of what a Support Vector Machine does we decided to implement one on our own using several publications. Most of them were based on the important paper of Platt \cite{platt} where he introduced a new approach for the calculation of the Support Vectors that improves the performance a lot. This algorithm is called Sequential Minimal Optimization. Performance was not the highest priority for us but instead understandability and the costs of implementation. Therefore we implemented a less complex version of the algorithm presented in Platt's paper.
+To get a better understanding of what a Support Vector Machine does we decided to implement one on our own using several publications. Most of them were based on the important paper of Platt \cite{platt} where he introduced a new approach for the calculation of the Support Vectors that improves the performance a lot. This algorithm is called Sequential Minimal Optimization. Performance was not the highest priority for us but instead understandability and the costs of implementation. Therefore we implemented a less complex version of the algorithm mainly based on \cite{smo}.
 
 As the mathematical background of the SVMs has been explained in the lecture and might be considered a standard solution for machine learning, the following introduction focuses on the main equations.
 
@@ -164,19 +164,19 @@ For the presented problem the Kuhn Tucker conditions define the $\alpha _i$ that
 To deal with linearly non separable data, the scalar products can be replaced by kernel functions $kernel(x_i, x_j)$.
 
 \subsection{Description of the Implementation}
-Instead of trying to maximize the whole set of $\alpha$ the SMO algorithm exploits that the maximum will be reached when pairs $\alpha _i, \alpha _j$ fulfil the KKT conditions (while it needs to be at least a pair, since the conditions imply linearity of two $\alpha$ values). Thus the SMO algorithm selects two $\alpha$ parameters (that do not meet the KKT conditions) and optimizes them. Afterwards the b value gets adjusted according to the new values.
+Instead of trying to maximize the whole set of $\alpha$ the SMO algorithm exploits that the maximum will be reached when pairs $\alpha _i, \alpha _j$ fulfil the KKT conditions (while it needs to be at least a pair, since the conditions imply linearity of two $\alpha$ values). Thus the SMO algorithm selects two $\alpha$ parameters (that do not meet the KKT conditions) and optimizes them. Afterwards the threshold gets adjusted according to the new values.
 
 A big part of the actual publication from Platt deals with the heuristic of how two choose the $\alpha _i$ and $\alpha _j$ since this is a critical factor for the pace of its convergence as the number of possible pairs in a setup with $m$ features is $m(m-1)$. Accordingly the amount of time it takes to find the \textit{critical} values is decisive for the algorithms performance.
 
 Nevertheless, in this assignment a very simple heuristic is implemented in order to keep the code simple and understandable: the pairs are just purely randomly selected.
 
-Fig. \ref{fig:pseudo} in the Appendix shows the pseudo code of our implementation while Listing. \ref{code} in the Appendix shows the actual implementation in Python using Numpy. Basically the algorithm consists of an outer and inner loop. The inner loop iterates through the $alpha _i$ and checks weather it violates the KKT conditions. If this is the case, randomly a second parameter $\alpha _j$ is selected and will be adjusted using that the optimal $\alpha _j$ is given by
+Fig. \ref{fig:pseudo} in the Appendix shows the pseudo code of our implementation. Basically the algorithm consists of an outer and inner loop. The inner loop iterates through the $alpha _i$ and checks weather it violates the KKT conditions. If this is the case, randomly a second parameter $\alpha _j$ is selected and will be adjusted using that the optimal $\alpha _j$ is given by
 \begin{equation}
 \alpha^{'}_j = \alpha _j  - \frac{y^{(j)} (E_i - E_j)}{\eta}
 \end{equation}
-where $\eta$ can be interpreted as the second derivative of the Loss function function $W(\alpha)$ \cite{smo}. $E_i$ is the current error on the sample $x_i$. After that the new parameter is cropped to boundaries that follow from equation \ref{eq:alphabounds} and \ref{eq:sumalpha}. After the opposing parameter is calculated exploiting the linearity the threshold can be updated by using the classifier function $f(x)$ and either one $alpha$ that lays within $(0, C)$ or if this is true for both, their arithmetic mean.
+where $\eta$ can be interpreted as the second derivative of the generic function function $W(\alpha)$ \cite{smo}. $E_i$ is the current error on the sample $x_i$. After that the new parameter is cropped to boundaries that follow from equation \ref{eq:alphabounds} and \ref{eq:sumalpha}. Then the opposing parameter is calculated exploiting the linearity the threshold can be updated by using the classifier function $f(x)$ and either one $alpha$ that lays within $(0, C)$ or if this is true for both, their arithmetic mean.
 
-The outer loop counts how often the inner loop fails to find a partner for optimization or that yields to no significant (significance is defined by the user) changes. The algorithm terminates when a certain, user defined number of passes is reached.
+The outer loop counts how often the inner loop fails to find a partner for optimization or the optimization yields to no significant changes (significance is defined by the user). The algorithm terminates when a certain, user defined number of passes is reached.
 
 \subsection{Comparison with SciKit SVM}
 The implementation does not make a lot use of Numpy's vectorization skills and therefore performs poor even considering that it is Python code. Still it reaches satisfying scores with the titanic train set in comparison to other SciKit algorithms as can be seen in fig. \ref{fig:comparison}.
@@ -188,7 +188,7 @@ The implementation does not make a lot use of Numpy's vectorization skills and t
   \label{fig:comparison}  
 \end{figure}
 
-On the other hand and less surprisingly, the performance is quite poor compared to the SVM Module from the SciKit framework\footnote{http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html}. One can deduce from figure \ref{fig:benchmark} that the prefactor as well as the exponential behaviour is significantly worse.
+On the other hand and less surprisingly, the performance is quite poor compared to the SVM Module from the SciKit framework\footnote{\url{http://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html}}. One can deduce from figure \ref{fig:benchmark} that the prefactor as well as the exponential behaviour is significantly worse.
 
 \begin{figure}
   \centering
@@ -197,18 +197,7 @@ On the other hand and less surprisingly, the performance is quite poor compared 
   \label{fig:benchmark}  
 \end{figure}
 
-\iffalse
-%%% THIS PART GETS IGNORED %%%
-\begin{SCfigure}
-  \centering
-  \includegraphics[width=0.3\textwidth]%
-    {media_saved/benchmark}% picture filename
-      \caption{Comparison the self made implementation and the optimized SciKit implementation. The different intercepts ($\delta ~ 6$) as well as the different slopes (factor $1.6$) express the smaller prefactor and exponent of runtime of the SciKit's implementation.}
-      \label{fig:benchmark}  
-\end{SCfigure}
-\fi
-
-It turned out that the quality of the result the implemented algorithm yields heavily depends on the parameter that determines after how many \textit{changeless} runs it terminates. As you can see in figure \ref{fig:max_passes}, the algorithm yields a lot support vectors that do not lie within the margin when it stops after one iteration causes no change. The quality of the solution increases when the number of passes is larger. This behaviour results from the property of the SVM which is that it only optimizes data points that lay within the margin. Since this "quickly" becomes a small number of data points it is unlikely that the random selection finds a pair to optimize.
+It turned out that the quality of the result heavily depends on the parameter that determines after how many \textit{changeless} runs it terminates. As you can see in figure \ref{fig:max_passes}, the algorithm yields a lot support vectors that do not lie within the margin when it stops after one changeless iteration. The quality of the solution increases when the number of passes is larger. The same holds for the runtime unfortunately. This behaviour results from the optimization behaviour of the SVM which is that it only optimizes data points which lay within the margin. Since this "quickly" becomes a small number of data points it is unlikely that the random selection finds a pair to optimize.
 
 \begin{figure}
     \centering
@@ -231,14 +220,14 @@ It turned out that the quality of the result the implemented algorithm yields he
         \caption{\texttt{max\_passes=30}}
         \label{fig:max_pass_30}
     \end{subfigure}
-    \caption{Result of our SVM depending on number of loops without any chaning $\alpha$ that terminate the alogrithm.}\label{fig:max_passes}
+    \caption{Results of our SVM on a linear seperable test set depending on after how many changeless loops it terminates.}\label{fig:max_passes}
 \end{figure}
 
 \section{Summary}
-...
-
+We were able to apply our knowledge from class on a simple example problem and thereby extend it with practical skills such as analysing and optimizing features, using the SciKit Framework and dealing with missing data. Additionally we gained deeper insight into one Machine Learning algorithm and were able to point out one critical factor for its performance.
 
 \pagebreak
+\appendix
 \section*{Appendix}
 \section{Pseudo Code of the SMO algorithm}
 \begin{figure}[!h]
@@ -248,6 +237,8 @@ It turned out that the quality of the result the implemented algorithm yields he
   \label{fig:pseudo}  
 \end{figure}
 
+\iffalse
+%%% THIS PART GETS IGNORED %%%
 \section{Code}
 \lstinputlisting[
 	label={code},
@@ -259,5 +250,15 @@ It turned out that the quality of the result the implemented algorithm yields he
 ]											% letzte Codezeile
 {./own_svm/own_svm.py}
 
+\begin{SCfigure}
+  \centering
+  \includegraphics[width=0.3\textwidth]%
+    {media_saved/benchmark}% picture filename
+      \caption{Comparison the self made implementation and the optimized SciKit implementation. The different intercepts ($\delta ~ 6$) as well as the different slopes (factor $1.6$) express the smaller prefactor and exponent of runtime of the SciKit's implementation.}
+      \label{fig:benchmark}  
+\end{SCfigure}
+\fi
+%%% Stop ignorance %%%
+
 \printbibliography %hier Bibliographie ausgeben lassen
-\end{document}        
+\end{document}      
