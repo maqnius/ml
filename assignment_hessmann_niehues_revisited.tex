@@ -135,7 +135,7 @@ As the mathematical background of the SVMs has been explained in the lecture and
 The initial problem is a linear separable dataset with the labels $y_i \in \{-1, 1\}$. The classifier that the SVM is supposed to compute will have the form
 
 \begin{equation}
-    f(x) = <\omega, x> + b
+    f(x) = \langle \omega, x \rangle + b
 \end{equation}
 
 Now suppose we have a separating hyperplane and $w$ is perpendicular. The main task of the SVM is to maximise the closest perpendicular distance between the hyperplane and the two classes. This is down by the following constraints
@@ -150,7 +150,7 @@ Consequently do points that lie on the hyperplane satisfy $f(x)=0$.
 From these set of equations follows that the minimal distance from the hyperplane to one of the datapoints is $d=\frac{1}{|\omega|}$ which shall be maximized. Introducing an additional factor that allows but penalizes non separable noise and reformulating the problem with Lagrange multipliers (the $\alpha _i$) we get the following problem:
 
 \begin{align}
-\text{max}_\alpha& W(\alpha) = \sum_{i=1}^m \alpha _i - \frac{1}{2} \sum_{i=1}^m \sum_{j=1}^m y^{(i)} y^{(j)} \alpha _i <x^{(i)}, x^{(j)}> \\
+\text{max}_\alpha& W(\alpha) = \sum_{i=1}^m \alpha _i - \frac{1}{2} \sum_{i=1}^m \sum_{j=1}^m y^{(i)} y^{(j)} \alpha _i \langle x^{(i)}, x^{(j)} \rangle \\
 \text{subject to \em} & 0\leq \alpha _i \leq C, i = 1,..., m \\
 & \sum_{i=1}^m \alpha _i y^{(i)} = 0 \label{eq:sumalpha}
 \end{align}
@@ -158,9 +158,9 @@ From these set of equations follows that the minimal distance from the hyperplan
 For the presented problem the Kuhn Tucker conditions define the $\alpha _i$ that represent an optimal solution. The KKT conditions are
 
 \begin{align}
-\alpha _i = 0 & \implies  y^{(i)}(<\omega, x^{(i)}> + b)  \geq 1 \\
-\alpha _i = C & \implies  y^{(i)}(<\omega, x^{(i)}> + b)  \leq 1 \\
-0 \geq \alpha _i \geq C & \implies  y^{(i)}(<\omega, x^{(i)}> + b)  = 1 \label{eq:alphabounds}
+\alpha _i = 0 & \implies  y^{(i)}(\langle \omega, x^{(i)}\rangle + b)  \geq 1 \\
+\alpha _i = C & \implies  y^{(i)}(\langle \omega, x^{(i)} \rangle + b)  \leq 1 \\
+0 \geq \alpha _i \geq C & \implies  y^{(i)}(\langle \omega, x^{(i)} \rangle + b)  = 1 \label{eq:alphabounds}
 \end{align}
 
 To deal with linearly non separable data, the scalar products can be replaced by kernel functions $kernel(x_i, x_j)$.
